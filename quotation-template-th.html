@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Areda Atelier — ใบเสนอราคา</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Noto+Sans+Thai:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ============================================
+     AREDA DESIGN SYSTEM TOKENS
+     From: Figma Areda-Design-System-Claude
+     ============================================ */
+  :root {
+    /* Colors */
+    --color-charcoal: #252828;
+    --color-cream: #E1DFD4;
+    --color-taupe: #928A83;
+    --color-deep-dark: #121615;
+    --color-white: #FFFFFF;
+    --color-black: #000000;
+
+    /* Typography */
+    --font-family: 'Manrope', 'Noto Sans Thai', sans-serif;
+
+    /* Spacing (4px base) */
+    --space-xxs: 4px;
+    --space-xs: 8px;
+    --space-sm: 12px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-xxl: 48px;
+    --space-xxxl: 64px;
+
+    /* Border Radius */
+    --radius-none: 0px;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(18, 22, 21, 0.06);
+    --shadow-md: 0 2px 8px rgba(18, 22, 21, 0.10);
+    --shadow-lg: 0 4px 16px rgba(18, 22, 21, 0.12);
+  }
+
+  /* ============================================
+     RESET & BASE
+     ============================================ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-family);
+    font-size: 14px;
+    line-height: 21px;
+    font-weight: 400;
+    color: var(--color-charcoal);
+    background: #F5F4F0;
+  }
+
+  /* ============================================
+     PAGE CONTAINER (A4 portrait)
+     ============================================ */
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: var(--space-xl) auto;
+    padding: var(--space-xxl) var(--space-xxl) var(--space-xl);
+    background: var(--color-white);
+    box-shadow: var(--shadow-lg);
+  }
+
+  @media print {
+    body { background: none; }
+    .page {
+      margin: 0;
+      padding: 15mm 18mm 12mm;
+      box-shadow: none;
+      width: 100%;
+      min-height: auto;
+    }
+    .page-break { page-break-before: always; }
+  }
+
+  /* ============================================
+     HEADER
+     ============================================ */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: var(--space-lg);
+    border-bottom: 2px solid var(--color-charcoal);
+    margin-bottom: var(--space-lg);
+  }
+
+  .header-brand { flex: 1; }
+
+  .header-brand .company-name {
+    font-size: 28px;
+    line-height: 35px;
+    font-weight: 700;
+    color: var(--color-charcoal);
+    letter-spacing: -0.5px;
+  }
+
+  .header-brand .company-tagline {
+    font-size: 12px;
+    line-height: 17px;
+    font-weight: 600;
+    color: var(--color-taupe);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: var(--space-xxs);
+  }
+
+  .header-brand .company-details {
+    font-size: 10px;
+    line-height: 15px;
+    font-weight: 400;
+    color: var(--color-taupe);
+    margin-top: var(--space-xs);
+  }
+
+  .header-title { text-align: right; }
+
+  .header-title h1 {
+    font-size: 30px;
+    line-height: 36px;
+    font-weight: 600;
+    color: var(--color-charcoal);
+    letter-spacing: 1px;
+  }
+
+  .header-title .doc-date {
+    font-size: 12px;
+    line-height: 17px;
+    font-weight: 500;
+    color: var(--color-taupe);
+    margin-top: var(--space-xxs);
+  }
+
+  /* ============================================
+     INFO GRID
+     ============================================ */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-lg);
+  }
+
+  .info-block { font-size: 13px; line-height: 20px; }
+
+  .info-block .label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-taupe);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: var(--space-xxs);
+  }
+
+  .info-row { display: flex; gap: var(--space-xs); padding: 3px 0; }
+  .info-row .key { min-width: 120px; font-weight: 500; color: var(--color-taupe); flex-shrink: 0; }
+  .info-row .value { color: var(--color-charcoal); font-weight: 500; }
+  .info-row .value.strong { font-weight: 700; }
+
+  /* ============================================
+     PROJECT BANNER
+     ============================================ */
+  .project-banner {
+    background: var(--color-cream);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-lg);
+    display: flex;
+    gap: var(--space-xl);
+  }
+
+  .project-banner .key {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-taupe);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .project-banner .value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-charcoal);
+    margin-top: 2px;
+  }
+
+  /* ============================================
+     LINE ITEMS TABLE
+     ============================================ */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: var(--space-lg);
+    font-size: 12px;
+    line-height: 17px;
+  }
+
+  .items-table thead th {
+    background: var(--color-charcoal);
+    color: var(--color-cream);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    padding: var(--space-xs) var(--space-sm);
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .items-table thead th.num { text-align: center; width: 40px; }
+  .items-table thead th.code { width: 14%; }
+  .items-table thead th.desc { width: auto; }
+  .items-table thead th.unit { text-align: center; width: 8%; }
+  .items-table thead th.qty { text-align: center; width: 8%; }
+  .items-table thead th.rate { text-align: right; width: 14%; }
+  .items-table thead th.amount { text-align: right; width: 16%; }
+
+  .items-table tbody td {
+    padding: var(--space-xs) var(--space-sm);
+    border-bottom: 1px solid #ECEAE4;
+    vertical-align: top;
+  }
+
+  .items-table tbody td.num { text-align: center; color: var(--color-taupe); font-weight: 500; }
+  .items-table tbody td.code { font-weight: 500; font-family: 'Manrope', monospace; }
+  .items-table tbody td.unit { text-align: center; }
+  .items-table tbody td.qty { text-align: center; font-weight: 500; }
+  .items-table tbody td.rate { text-align: right; font-weight: 500; }
+  .items-table tbody td.amount { text-align: right; font-weight: 600; }
+
+  .items-table tbody tr.section-header td {
+    background: var(--color-cream);
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--color-charcoal);
+    border-bottom: none;
+    padding: var(--space-xs) var(--space-sm);
+    letter-spacing: 0.3px;
+  }
+
+  .items-table tbody tr:hover td { background: #FAFAF8; }
+  .items-table tbody tr.section-header:hover td { background: var(--color-cream); }
+
+  .item-desc-main { font-weight: 500; color: var(--color-charcoal); }
+  .item-desc-sub { font-size: 11px; color: var(--color-taupe); margin-top: 2px; }
+
+  /* ============================================
+     TOTALS BLOCK
+     ============================================ */
+  .totals-block { display: flex; justify-content: flex-end; margin-bottom: var(--space-xl); }
+
+  .totals-table { width: 320px; border-collapse: collapse; }
+  .totals-table tr td { padding: var(--space-xs) var(--space-sm); font-size: 13px; }
+  .totals-table tr td:first-child { font-weight: 500; color: var(--color-taupe); text-align: left; }
+  .totals-table tr td:last-child { font-weight: 600; text-align: right; color: var(--color-charcoal); }
+  .totals-table tr.vat td { border-top: 1px solid #ECEAE4; }
+  .totals-table tr.grand-total td {
+    border-top: 2px solid var(--color-charcoal);
+    font-size: 16px;
+    font-weight: 700;
+    padding-top: var(--space-sm);
+    color: var(--color-charcoal);
+  }
+
+  /* ============================================
+     SCHEDULE
+     ============================================ */
+  .schedule-section { margin-bottom: var(--space-lg); }
+
+  .section-title {
+    font-size: 14px;
+    line-height: 21px;
+    font-weight: 700;
+    color: var(--color-charcoal);
+    margin-bottom: var(--space-sm);
+    padding-bottom: var(--space-xxs);
+    border-bottom: 1px solid #ECEAE4;
+  }
+
+  .schedule-table { width: 100%; border-collapse: collapse; font-size: 12px; line-height: 17px; }
+  .schedule-table td { padding: var(--space-xxs) var(--space-sm); vertical-align: top; }
+  .schedule-table td:first-child { font-weight: 500; color: var(--color-taupe); width: 220px; }
+  .schedule-table td:nth-child(2) { color: var(--color-charcoal); }
+  .schedule-table td:last-child { color: var(--color-charcoal); }
+
+  /* ============================================
+     TERMS & CONDITIONS
+     ============================================ */
+  .terms-section { margin-bottom: var(--space-lg); }
+
+  .terms-list { list-style: none; font-size: 11px; line-height: 18px; color: var(--color-charcoal); }
+  .terms-list li { padding: 2px 0 2px var(--space-md); position: relative; }
+  .terms-list li::before { content: "\25CB"; position: absolute; left: 0; color: var(--color-taupe); font-size: 10px; }
+
+  /* ============================================
+     PAYMENT TERMS
+     ============================================ */
+  .payment-table { width: 100%; border-collapse: collapse; font-size: 12px; line-height: 17px; margin-top: var(--space-xs); }
+  .payment-table td { padding: var(--space-xxs) var(--space-sm); }
+  .payment-table td:first-child { font-weight: 600; white-space: nowrap; width: 130px; }
+  .payment-table td:nth-child(2) { color: var(--color-charcoal); }
+  .payment-table td:last-child { text-align: right; font-weight: 600; width: 140px; }
+
+  /* ============================================
+     SIGNATURE
+     ============================================ */
+  .signature-section { margin-top: var(--space-xxxl); display: flex; justify-content: flex-end; }
+  .signature-block { text-align: center; width: 250px; }
+  .signature-line { border-bottom: 1px solid var(--color-charcoal); margin-bottom: var(--space-xs); height: 48px; }
+  .signature-label { font-size: 12px; font-weight: 500; color: var(--color-taupe); }
+  .signature-date { margin-top: var(--space-lg); }
+
+  /* ============================================
+     FOOTER
+     ============================================ */
+  .footer {
+    margin-top: var(--space-xxl);
+    padding-top: var(--space-sm);
+    border-top: 1px solid #ECEAE4;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--color-taupe);
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ========== ส่วนหัว ========== -->
+  <header class="header">
+    <div class="header-brand">
+      <img src="images/AA_Logo_HV_1.png" height="44" alt="Areda Atelier" style="display:block;margin-bottom:8px;">
+      <div class="company-details">
+        บจก. จีโอ คอร์ปอเรชั่น &nbsp;·&nbsp; 11/2 P23 Tower ชั้น 8 ห้อง 8A ซ.สุขุมวิท 23 แขวงคลองเตยเหนือ เขตวัฒนา กรุงเทพฯ 10110<br>
+        โทร +66 2 124 5000 &nbsp;|&nbsp; contact@goco.bz &nbsp;|&nbsp; เลขผู้เสียภาษี 0105562096721
+      </div>
+    </div>
+    <div class="header-title">
+      <h1>ใบเสนอราคา</h1>
+      <div class="doc-date">{{document_date}}</div>
+    </div>
+  </header>
+
+  <!-- ========== ข้อมูลลูกค้าและเอกสาร ========== -->
+  <div class="info-grid">
+    <div class="info-block">
+      <div class="label">ลูกค้า</div>
+      <div class="info-row"><span class="key">เรียน</span><span class="value strong">{{customer_attn}}</span></div>
+      <div class="info-row"><span class="key">บริษัท</span><span class="value">{{customer_company}}</span></div>
+      <div class="info-row"><span class="key">ที่อยู่</span><span class="value">{{customer_address}}</span></div>
+      <div class="info-row"><span class="key">เลขผู้เสียภาษี</span><span class="value">{{customer_tax_id}}</span></div>
+      <div class="info-row"><span class="key">อีเมล</span><span class="value">{{customer_email}}</span></div>
+      <div class="info-row"><span class="key">โทรศัพท์</span><span class="value">{{customer_tel}}</span></div>
+    </div>
+    <div class="info-block">
+      <div class="label">เอกสาร</div>
+      <div class="info-row"><span class="key">เลขที่ใบเสนอราคา</span><span class="value strong">{{quotation_no}}</span></div>
+      <div class="info-row"><span class="key">ครั้งที่แก้ไข</span><span class="value">{{revision_no}}</span></div>
+      <div class="info-row"><span class="key">วันที่</span><span class="value">{{document_date}}</span></div>
+      <div class="info-row"><span class="key">ผู้เสนอ</span><span class="value">{{proposed_by}}</span></div>
+      <div class="info-row"><span class="key">อีเมลติดต่อ</span><span class="value">{{proposer_email}}</span></div>
+      <div class="info-row"><span class="key">มือถือ</span><span class="value">{{proposer_mobile}}</span></div>
+    </div>
+  </div>
+
+  <!-- ========== แบนเนอร์โครงการ ========== -->
+  <div class="project-banner">
+    <div>
+      <div class="key">โครงการ</div>
+      <div class="value">{{project_name}}</div>
+    </div>
+    <div>
+      <div class="key">เรื่อง</div>
+      <div class="value">{{subject}}</div>
+    </div>
+  </div>
+
+  <!-- ========== รายการสินค้า ========== -->
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th class="num">ลำดับ</th>
+        <th class="code">รหัสสินค้า</th>
+        <th class="desc">รายละเอียด</th>
+        <th class="unit">หน่วย</th>
+        <th class="qty">จำนวน</th>
+        <th class="rate">ราคาต่อหน่วย (บาท)</th>
+        <th class="amount">จำนวนเงิน (บาท)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- หมวดหมู่ -->
+      <tr class="section-header">
+        <td colspan="7">เฟอร์นิเจอร์นำเข้า — ห้องนั่งเล่น</td>
+      </tr>
+
+      <tr>
+        <td class="num">1</td>
+        <td class="code">AA-SF-2401</td>
+        <td>
+          <div class="item-desc-main">โซฟาหนังแท้อิตาลี — 3 ที่นั่ง</div>
+          <div class="item-desc-sub">วัสดุ: หนังแท้ชั้นดี โครงไม้โอ๊ค · 220×95×82 ซม.</div>
+        </td>
+        <td class="unit">ชุด</td>
+        <td class="qty">2</td>
+        <td class="rate">185,000.00</td>
+        <td class="amount">370,000.00</td>
+      </tr>
+      <tr>
+        <td class="num">2</td>
+        <td class="code">AA-CT-2402</td>
+        <td>
+          <div class="item-desc-main">โต๊ะกลางหินอ่อน — Calacatta</div>
+          <div class="item-desc-sub">ท็อปหินอ่อน Calacatta ขาทองเหลืองแปรง · 120×60×42 ซม.</div>
+        </td>
+        <td class="unit">ชิ้น</td>
+        <td class="qty">1</td>
+        <td class="rate">92,500.00</td>
+        <td class="amount">92,500.00</td>
+      </tr>
+
+      <!-- หมวดหมู่ -->
+      <tr class="section-header">
+        <td colspan="7">ฮาร์ดแวร์ — อุปกรณ์ห้องน้ำ</td>
+      </tr>
+
+      <tr>
+        <td class="num">3</td>
+        <td class="code">AA-HW-RH01</td>
+        <td>
+          <div class="item-desc-main">ฝักบัวเรนชาวเวอร์ — นิกเกิลแปรง</div>
+          <div class="item-desc-sub">เส้นผ่านศูนย์กลาง 300 มม. ติดตั้งฝังเพดาน</div>
+        </td>
+        <td class="unit">ชุด</td>
+        <td class="qty">4</td>
+        <td class="rate">18,900.00</td>
+        <td class="amount">75,600.00</td>
+      </tr>
+      <tr>
+        <td class="num">4</td>
+        <td class="code">AA-HW-FT01</td>
+        <td>
+          <div class="item-desc-main">ก๊อกอ่างล้างหน้า — สีดำด้าน</div>
+          <div class="item-desc-sub">รูเดียว ตลับเซรามิก ตัวก๊อกทองเหลือง</div>
+        </td>
+        <td class="unit">ชิ้น</td>
+        <td class="qty">6</td>
+        <td class="rate">8,750.00</td>
+        <td class="amount">52,500.00</td>
+      </tr>
+
+      <!-- หมวดหมู่ -->
+      <tr class="section-header">
+        <td colspan="7">การจัดส่งและติดตั้ง</td>
+      </tr>
+
+      <tr>
+        <td class="num">5</td>
+        <td class="code">—</td>
+        <td>
+          <div class="item-desc-main">ค่าขนส่ง พิธีการศุลกากร และจัดส่งถึงหน้างาน</div>
+        </td>
+        <td class="unit">ล็อต</td>
+        <td class="qty">1</td>
+        <td class="rate">45,000.00</td>
+        <td class="amount">45,000.00</td>
+      </tr>
+      <tr>
+        <td class="num">6</td>
+        <td class="code">—</td>
+        <td>
+          <div class="item-desc-main">ติดตั้งและประกอบ ณ หน้างาน</div>
+        </td>
+        <td class="unit">ล็อต</td>
+        <td class="qty">1</td>
+        <td class="rate">28,000.00</td>
+        <td class="amount">28,000.00</td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  <!-- ========== ยอดรวม ========== -->
+  <div class="totals-block">
+    <table class="totals-table">
+      <tr>
+        <td>ยอดรวมก่อนภาษี</td>
+        <td>{{subtotal}}</td>
+      </tr>
+      <tr class="vat">
+        <td>ภาษีมูลค่าเพิ่ม 7%</td>
+        <td>{{vat_amount}}</td>
+      </tr>
+      <tr class="grand-total">
+        <td>ยอดรวมทั้งสิ้น</td>
+        <td>{{grand_total}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ========== กำหนดการโดยประมาณ ========== -->
+  <div class="schedule-section">
+    <div class="section-title">กำหนดการโดยประมาณ</div>
+    <table class="schedule-table">
+      <tr>
+        <td>รับเงินมัดจำ</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>อนุมัติแบบ</td>
+        <td>7–14 วัน</td>
+      </tr>
+      <tr>
+        <td>จัดซื้อ / ผลิต</td>
+        <td>45–90 วัน *ขึ้นอยู่กับสต็อกและระยะเวลาผลิตของโรงงาน</td>
+      </tr>
+      <tr>
+        <td>การขนส่งและศุลกากร</td>
+        <td>30–45 วัน *ขนส่งทางเรือ; ขึ้นอยู่กับตารางท่าเรือ</td>
+      </tr>
+      <tr>
+        <td>จัดส่งและติดตั้ง</td>
+        <td>7–14 วันทำการ ในสภาพหน้างานที่พร้อม</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ========== การรับประกันสินค้า ========== -->
+  <div class="terms-section">
+    <div class="section-title">การรับประกันสินค้า</div>
+    <ul class="terms-list">
+      <li>รับประกัน 1 ปี สำหรับข้อบกพร่องด้านฝีมือและโครงสร้าง นับจากวันติดตั้ง กรุณาอ้างอิงสัญญาซื้อขายสำหรับเงื่อนไขฉบับเต็ม</li>
+      <li>การรับประกันครอบคลุมเฉพาะการใช้งานปกติในที่พักอาศัยหรือเชิงพาณิชย์เท่านั้น</li>
+      <li>การรับประกันจากผู้ผลิตสินค้านำเข้าจะส่งต่อตามเงื่อนไขเดิม ระยะเวลาแตกต่างตามแบรนด์</li>
+      <li>ไม่ครอบคลุมความเสียหายจากการใช้งานผิดวิธี ดัดแปลง หรือสภาพแวดล้อมนอกเหนือข้อกำหนดสินค้า</li>
+    </ul>
+  </div>
+
+  <!-- ========== ขอบเขตงาน ========== -->
+  <div class="terms-section">
+    <div class="section-title">ขอบเขตงาน</div>
+    <ul class="terms-list">
+      <li>ไม่รวมงานโครงสร้าง งานโยธา หรืองานระบบ เว้นแต่ระบุไว้ในใบเสนอราคานี้</li>
+      <li>ไม่รวมการรื้อถอนหรือกำจัดเฟอร์นิเจอร์/อุปกรณ์เดิม เว้นแต่ระบุไว้</li>
+      <li>ไม่รวมงานใดๆ ที่ไม่ได้ระบุในเอกสารฉบับนี้</li>
+      <li>หน้างานต้องพร้อมสำหรับการติดตั้ง (สะอาด พื้นเรียบ สาธารณูปโภคพร้อม) ก่อนวันจัดส่ง</li>
+    </ul>
+  </div>
+
+  <!-- ========== หมายเหตุ ========== -->
+  <div class="terms-section">
+    <div class="section-title">หมายเหตุ</div>
+    <ul class="terms-list">
+      <li>รูปภาพและสเปคทั้งหมดในเอกสารนี้เป็นเพียงข้อมูลอ้างอิง สินค้าจริงอาจมีความแตกต่างเล็กน้อยเรื่องสี ลายไม้ และขนาด เนื่องจากธรรมชาติของวัสดุ</li>
+      <li>Areda Atelier สงวนสิทธิ์ในการกำหนดสเปคสุดท้ายและมาตรฐานความสมบูรณ์ของสินค้าที่จัดส่ง</li>
+      <li>ต้องลงนามสัญญาซื้อขายตามเงื่อนไขมาตรฐานของบริษัทเมื่อยอมรับใบเสนอราคานี้</li>
+      <li>เงินมัดจำไม่สามารถขอคืนได้เมื่อเริ่มกระบวนการจัดซื้อแล้ว</li>
+      <li>ราคาต่อหน่วยในใบเสนอราคานี้อ้างอิงอัตราแลกเปลี่ยนเงินตราต่างประเทศรายวัน และมีผลเพียง 15 วัน นับจากวันที่ในเอกสาร</li>
+      <li>ลูกค้าไม่สามารถหักกลบหรือระงับการชำระเงินใดๆ ต้องชำระตามกำหนดที่ตกลงด้านล่าง</li>
+      <li>ข้อบกพร่องจะได้รับการแก้ไขภายใต้เงื่อนไขการรับประกัน ไม่สามารถใช้เป็นเหตุผลในการระงับการชำระเงิน</li>
+      <li>กำหนดการโดยประมาณอาจเปลี่ยนแปลงได้จากปัญหาการขนส่ง ศุลกากร หรือห่วงโซ่อุปทานที่ไม่คาดคิด</li>
+    </ul>
+  </div>
+
+  <!-- ========== เงื่อนไขการชำระเงิน ========== -->
+  <div class="terms-section">
+    <div class="section-title">เงื่อนไขการชำระเงิน</div>
+    <table class="payment-table">
+      <tr>
+        <td>งวดที่ 1 — 30%</td>
+        <td>มัดจำเมื่อลงนามสัญญา / ยืนยันคำสั่งซื้อ</td>
+        <td>{{payment_1}}</td>
+      </tr>
+      <tr>
+        <td>งวดที่ 2 — 30%</td>
+        <td>ก่อนจัดส่งจากต้นทาง / ผลิตเสร็จ</td>
+        <td>{{payment_2}}</td>
+      </tr>
+      <tr>
+        <td>งวดที่ 3 — 30%</td>
+        <td>เมื่อส่งมอบถึงหน้างาน / รับสินค้า</td>
+        <td>{{payment_3}}</td>
+      </tr>
+      <tr>
+        <td>งวดที่ 4 — 10%</td>
+        <td>หลังติดตั้งเสร็จสมบูรณ์และส่งมอบงาน</td>
+        <td>{{payment_4}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ========== ลงนาม ========== -->
+  <div class="signature-section">
+    <div class="signature-block">
+      <div class="signature-line"></div>
+      <div class="signature-label">ผู้ยืนยันคำสั่งซื้อ</div>
+      <div class="signature-date">
+        <div class="signature-line"></div>
+        <div class="signature-label">วันที่</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== ส่วนท้าย ========== -->
+  <div class="footer">
+    <span>Areda Atelier — {{quotation_no}} แก้ไขครั้งที่ {{revision_no}}</span>
+    <span>หน้า 1 จาก 1</span>
+  </div>
+
+</div>
+
+</body>
+</html>
