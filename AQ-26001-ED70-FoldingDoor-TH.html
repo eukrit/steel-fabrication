@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Areda Atelier — ใบเสนอราคา AQ-26001</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Noto+Sans+Thai:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-charcoal: #252828;
+    --color-cream: #E1DFD4;
+    --color-taupe: #928A83;
+    --color-deep-dark: #121615;
+    --color-white: #FFFFFF;
+    --font-family: 'Manrope', 'Noto Sans Thai', sans-serif;
+    --space-xxs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px;
+    --space-lg: 24px; --space-xl: 32px; --space-xxl: 48px; --space-xxxl: 64px;
+    --radius-md: 8px;
+    --shadow-lg: 0 4px 16px rgba(18, 22, 21, 0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-family);
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: 400;
+    color: var(--color-charcoal);
+    background: #F5F4F0;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: var(--space-xl) auto;
+    padding: var(--space-xxl) var(--space-xxl) var(--space-xl);
+    background: var(--color-white);
+    box-shadow: var(--shadow-lg);
+  }
+
+  @media print {
+    body { background: none; }
+    .page { margin: 0; padding: 14mm 16mm 12mm; box-shadow: none; width: 100%; min-height: auto; }
+  }
+
+  /* HEADER */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: var(--space-lg);
+    border-bottom: 2px solid var(--color-charcoal);
+    margin-bottom: var(--space-lg);
+  }
+  .company-name { font-size: 26px; font-weight: 700; color: var(--color-charcoal); letter-spacing: -0.5px; }
+  .company-tagline { font-size: 11px; font-weight: 600; color: var(--color-taupe); letter-spacing: 1px; margin-top: 3px; }
+  .company-details { font-size: 11px; line-height: 17px; color: var(--color-taupe); margin-top: var(--space-sm); }
+  .header-title { text-align: right; }
+  .header-title h1 { font-size: 32px; line-height: 39px; font-weight: 600; color: var(--color-charcoal); letter-spacing: 2px; }
+  .header-title .doc-meta { font-size: 12px; color: var(--color-taupe); margin-top: var(--space-xxs); }
+  .header-title .doc-code { font-size: 14px; font-weight: 700; color: var(--color-charcoal); }
+
+  /* INFO GRID */
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl); margin-bottom: var(--space-lg); }
+  .info-block .label { font-size: 11px; font-weight: 600; color: var(--color-taupe); text-transform: uppercase; letter-spacing: 1px; margin-bottom: var(--space-xxs); }
+  .info-row { display: flex; gap: var(--space-xs); padding: 2px 0; font-size: 12px; }
+  .info-row .key { min-width: 115px; font-weight: 500; color: var(--color-taupe); flex-shrink: 0; }
+  .info-row .value { color: var(--color-charcoal); font-weight: 500; }
+  .info-row .value.strong { font-weight: 700; }
+
+  /* PROJECT BANNER */
+  .project-banner {
+    background: var(--color-cream);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-lg);
+    display: flex;
+    gap: var(--space-xl);
+  }
+  .project-banner .key { font-size: 11px; font-weight: 600; color: var(--color-taupe); text-transform: uppercase; letter-spacing: 1px; }
+  .project-banner .value { font-size: 13px; font-weight: 600; color: var(--color-charcoal); margin-top: 2px; }
+
+  /* PRODUCT SPEC BOX */
+  .spec-box {
+    border: 1px solid #ECEAE4;
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin-bottom: var(--space-xs);
+    background: #FAFAF8;
+  }
+  .spec-box .spec-title { font-size: 12px; font-weight: 700; color: var(--color-charcoal); margin-bottom: var(--space-xs); }
+  .spec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-xs) var(--space-lg); font-size: 11px; }
+  .spec-grid .sk { color: var(--color-taupe); font-weight: 500; }
+  .spec-grid .sv { color: var(--color-charcoal); font-weight: 600; }
+
+  /* LINE ITEMS TABLE */
+  .items-table { width: 100%; border-collapse: collapse; margin-bottom: var(--space-lg); font-size: 12px; }
+  .items-table thead th {
+    background: var(--color-charcoal); color: var(--color-cream);
+    font-weight: 600; font-size: 10px; letter-spacing: 0.5px;
+    padding: var(--space-xs) var(--space-sm); text-align: left; white-space: nowrap;
+  }
+  .items-table thead th.num { text-align: center; width: 36px; }
+  .items-table thead th.code { width: 13%; }
+  .items-table thead th.unit { text-align: center; width: 7%; }
+  .items-table thead th.qty { text-align: center; width: 7%; }
+  .items-table thead th.rate { text-align: right; width: 16%; }
+  .items-table thead th.amount { text-align: right; width: 17%; }
+  .items-table tbody td { padding: var(--space-xs) var(--space-sm); border-bottom: 1px solid #ECEAE4; vertical-align: top; }
+  .items-table tbody td.num { text-align: center; color: var(--color-taupe); font-weight: 500; }
+  .items-table tbody td.code { font-weight: 500; font-size: 11px; }
+  .items-table tbody td.unit { text-align: center; }
+  .items-table tbody td.qty { text-align: center; font-weight: 500; }
+  .items-table tbody td.rate { text-align: right; font-weight: 500; }
+  .items-table tbody td.amount { text-align: right; font-weight: 600; }
+  .items-table tbody tr.section-header td {
+    background: var(--color-cream); font-weight: 700; font-size: 11px;
+    color: var(--color-charcoal); border-bottom: none; padding: var(--space-xs) var(--space-sm);
+  }
+  .items-table tbody tr:hover td { background: #FAFAF8; }
+  .items-table tbody tr.section-header:hover td { background: var(--color-cream); }
+  .item-desc-main { font-weight: 600; color: var(--color-charcoal); }
+  .item-desc-sub { font-size: 11px; color: var(--color-taupe); margin-top: 2px; line-height: 16px; }
+
+  /* TOTALS */
+  .totals-block { display: flex; justify-content: flex-end; margin-bottom: var(--space-xl); }
+  .totals-table { width: 320px; border-collapse: collapse; }
+  .totals-table tr td { padding: var(--space-xs) var(--space-sm); font-size: 13px; }
+  .totals-table tr td:first-child { font-weight: 500; color: var(--color-taupe); }
+  .totals-table tr td:last-child { font-weight: 600; text-align: right; color: var(--color-charcoal); }
+  .totals-table tr.vat td { border-top: 1px solid #ECEAE4; }
+  .totals-table tr.grand-total td { border-top: 2px solid var(--color-charcoal); font-size: 15px; font-weight: 700; padding-top: var(--space-sm); }
+
+  /* SCHEDULE */
+  .section { margin-bottom: var(--space-lg); }
+  .section-title { font-size: 13px; font-weight: 700; color: var(--color-charcoal); margin-bottom: var(--space-sm); padding-bottom: var(--space-xxs); border-bottom: 1px solid #ECEAE4; }
+  .schedule-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .schedule-table td { padding: 3px var(--space-sm); vertical-align: top; }
+  .schedule-table td:first-child { font-weight: 600; color: var(--color-taupe); width: 210px; }
+  .schedule-table td:nth-child(2) { color: var(--color-charcoal); }
+  .schedule-table td:last-child { font-weight: 600; text-align: right; white-space: nowrap; width: 110px; }
+
+  /* TERMS */
+  .terms-list { list-style: none; font-size: 11px; line-height: 18px; color: var(--color-charcoal); }
+  .terms-list li { padding: 2px 0 2px var(--space-md); position: relative; }
+  .terms-list li::before { content: "○"; position: absolute; left: 0; color: var(--color-taupe); font-size: 10px; }
+  .terms-list li strong { color: var(--color-charcoal); }
+
+  /* PAYMENT */
+  .payment-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: var(--space-xs); }
+  .payment-table tr { border-bottom: 1px solid #ECEAE4; }
+  .payment-table td { padding: var(--space-xs) var(--space-sm); }
+  .payment-table td:first-child { font-weight: 700; color: var(--color-charcoal); white-space: nowrap; width: 140px; }
+  .payment-table td:nth-child(2) { color: var(--color-charcoal); }
+  .payment-table td:last-child { text-align: right; font-weight: 700; width: 130px; }
+
+  /* SIGNATURE */
+  .signature-section { margin-top: var(--space-xxxl); display: flex; justify-content: flex-end; }
+  .signature-block { text-align: center; width: 240px; }
+  .signature-line { border-bottom: 1px solid var(--color-charcoal); margin-bottom: var(--space-xs); height: 44px; }
+  .signature-label { font-size: 11px; font-weight: 500; color: var(--color-taupe); }
+  .signature-date { margin-top: var(--space-lg); }
+
+  /* VALIDITY BADGE */
+  .validity-badge {
+    display: inline-block;
+    background: #FEF3C7;
+    border: 1px solid #F59E0B;
+    color: #92400E;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 99px;
+    margin-left: var(--space-xs);
+  }
+
+  /* PRODUCT GALLERY */
+  .gallery-section { margin-bottom: var(--space-lg); }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: var(--space-sm);
+  }
+  .gallery-item {
+    border: 1px solid #ECEAE4;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: #FAFAF8;
+  }
+  .gallery-item.main { grid-row: span 2; }
+  .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .gallery-item.main img { max-height: 260px; object-fit: cover; }
+  .gallery-item.side img { max-height: 124px; object-fit: contain; padding: 6px; }
+  .gallery-caption {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--color-taupe);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 4px var(--space-sm);
+    background: var(--color-cream);
+    text-align: center;
+  }
+
+  /* FOOTER */
+  .footer { margin-top: var(--space-xxl); padding-top: var(--space-sm); border-top: 1px solid #ECEAE4; display: flex; justify-content: space-between; font-size: 10px; color: var(--color-taupe); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ส่วนหัว -->
+  <header class="header">
+    <div>
+      <img src="images/AA_Logo_HV_1.png" height="44" alt="Areda Atelier" style="display:block;margin-bottom:8px;">
+      <div class="company-details">
+        บริษัท จีโอ คอร์ปอเรชั่น จำกัด &nbsp;·&nbsp; 11/2 ชั้น 8 ห้อง 8เอ ซ. สุขุมวิท 23 ถ.สุขุมวิท แขวงคลองเตยเหนือ เขตวัฒนา กรุงเทพ 10110<br>
+        โทร +66 2 124 5000 &nbsp;|&nbsp; contact@goco.bz &nbsp;|&nbsp; เลขประจำตัวผู้เสียภาษี 0105562096721
+      </div>
+    </div>
+    <div class="header-title">
+      <h1>ใบเสนอราคา</h1>
+      <div class="doc-code">AQ-26001</div>
+      <div class="doc-meta">แก้ไขครั้งที่ 0 &nbsp;·&nbsp; 2 เมษายน 2569</div>
+      <div class="doc-meta">ใช้ได้ถึง <strong>17 เมษายน 2569</strong>
+        <span class="validity-badge">15 วัน</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ข้อมูลลูกค้าและเอกสาร -->
+  <div class="info-grid">
+    <div class="info-block">
+      <div class="label">ลูกค้า</div>
+      <div class="info-row"><span class="key">เรียน</span><span class="value strong">[ชื่อผู้ติดต่อ]</span></div>
+      <div class="info-row"><span class="key">บริษัท</span><span class="value">บริษัท ครีฟูล จำกัด</span></div>
+      <div class="info-row"><span class="key">ที่อยู่</span><span class="value">4 ซ.เฉลิมพระเกียรติ ร.9 ซ.30/20 ดอกไม้ ประเวศ กรุงเทพฯ 10250</span></div>
+      <div class="info-row"><span class="key">เลขผู้เสียภาษี</span><span class="value">[เลขผู้เสียภาษี]</span></div>
+      <div class="info-row"><span class="key">อีเมล</span><span class="value">center@creful.co.th</span></div>
+      <div class="info-row"><span class="key">โทรศัพท์</span><span class="value">+66 2 726 6261</span></div>
+    </div>
+    <div class="info-block">
+      <div class="label">เอกสาร</div>
+      <div class="info-row"><span class="key">เลขที่ใบเสนอราคา</span><span class="value strong">AQ-26001</span></div>
+      <div class="info-row"><span class="key">ครั้งที่แก้ไข</span><span class="value">0</span></div>
+      <div class="info-row"><span class="key">วันที่</span><span class="value">2 เมษายน 2569</span></div>
+      <div class="info-row"><span class="key">ผู้เสนอ</span><span class="value">[ชื่อผู้เสนอ]</span></div>
+      <div class="info-row"><span class="key">อีเมลติดต่อ</span><span class="value">[อีเมล]</span></div>
+      <div class="info-row"><span class="key">มือถือ</span><span class="value">[มือถือ]</span></div>
+    </div>
+  </div>
+
+  <!-- แบนเนอร์โครงการ -->
+  <div class="project-banner">
+    <div>
+      <div class="key">โครงการ</div>
+      <div class="value">[ชื่อโครงการ]</div>
+    </div>
+    <div>
+      <div class="key">เรื่อง</div>
+      <div class="value">ประตูบานพับอะลูมิเนียม — รุ่น ED 70, กระจก 2 ชั้น Thermal Break</div>
+    </div>
+  </div>
+
+  <!-- กล่องสเปคสินค้า -->
+  <div class="spec-box">
+    <div class="spec-title">ข้อมูลสเปคสินค้า — ประตูบานพับอะลูมิเนียม ED 70</div>
+    <div class="spec-grid">
+      <div><span class="sk">รุ่น</span><br><span class="sv">ED 70 Folding Door</span></div>
+      <div><span class="sk">โปรไฟล์กรอบ</span><br><span class="sv">อะลูมิเนียม 2.0 มม.</span></div>
+      <div><span class="sk">ระบบ</span><br><span class="sv">Thermal Break 70 มม.</span></div>
+      <div><span class="sk">กระจก</span><br><span class="sv">5 มม. + 18A + 5 มม. Tempered Clear IGU</span></div>
+      <div><span class="sk">ขนาดช่องเปิด (กว้าง × สูง)</span><br><span class="sv">2,750 × 2,750 มม.</span></div>
+      <div><span class="sk">พื้นที่</span><br><span class="sv">7.56 ตร.ม.</span></div>
+      <div><span class="sk">ฮาร์ดแวร์</span><br><span class="sv">PAG Series</span></div>
+      <div><span class="sk">ตัวเลือกสี</span><br><span class="sv">ดำ / เทา / ขาว / กาแฟ</span></div>
+      <div><span class="sk">ตำแหน่งอ้างอิง</span><br><span class="sv">D1</span></div>
+    </div>
+  </div>
+
+  <!-- ภาพอ้างอิงสินค้า -->
+  <div class="gallery-section">
+    <div class="section-title" style="font-size:13px;font-weight:700;color:var(--color-charcoal);margin-bottom:var(--space-sm);padding-bottom:var(--space-xxs);border-bottom:1px solid #ECEAE4;">ภาพอ้างอิงสินค้า</div>
+    <div class="gallery-grid">
+      <div class="gallery-item main">
+        <img src="images/supplier_img_2.jpeg" alt="ประตูบานพับ ED 70 — มุมมองติดตั้ง">
+        <div class="gallery-caption">ประตูบานพับ ED 70 — มุมมองติดตั้ง</div>
+      </div>
+      <div class="gallery-item side">
+        <img src="images/supplier_img_1.jpeg" alt="แบบทางเทคนิค">
+        <div class="gallery-caption">แบบทางเทคนิค — 2,750 × 2,750 มม.</div>
+      </div>
+      <div class="gallery-item side" style="display:grid;grid-template-rows:1fr auto;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+          <img src="images/supplier_img_4.jpeg" alt="ตัวเลือกสี" style="width:100%;max-height:80px;object-fit:cover;display:block;">
+          <img src="images/supplier_img_3.jpeg" alt="บรรจุภัณฑ์ส่งออก" style="width:100%;max-height:80px;object-fit:cover;display:block;">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;">
+          <div class="gallery-caption">ตัวเลือกสี</div>
+          <div class="gallery-caption">บรรจุภัณฑ์ส่งออก</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- รายการสินค้า -->
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th class="num">ลำดับ</th>
+        <th class="code">รหัสสินค้า</th>
+        <th class="desc">รายละเอียด</th>
+        <th class="unit">หน่วย</th>
+        <th class="qty">จำนวน</th>
+        <th class="rate">ราคาต่อหน่วย (บาท)</th>
+        <th class="amount">จำนวนเงิน (บาท)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr class="section-header">
+        <td colspan="7">ประตู-หน้าต่างอะลูมิเนียมนำเข้า</td>
+      </tr>
+
+      <tr>
+        <td class="num">1</td>
+        <td class="code">AA-FD-ED70</td>
+        <td>
+          <div class="item-desc-main">ประตูบานพับอะลูมิเนียม ED 70 — กระจก 2 ชั้น Thermal Break</div>
+          <div class="item-desc-sub">
+            โปรไฟล์: รุ่น ED 70 · กรอบ: อะลูมิเนียม 2.0 มม. · ระบบ: Thermal Break 70 มม.<br>
+            กระจก: 5 มม. + 18A + 5 มม. Tempered Clear IGU · พื้นที่: 7.56 ตร.ม.<br>
+            ฮาร์ดแวร์: PAG Series · ขนาดช่องเปิด: 2,750 × 2,750 มม. · ตำแหน่ง: D1<br>
+            ตัวเลือกสี: ดำ / เทา / ขาว / กาแฟ (ยืนยันเมื่อสั่งซื้อ)<br>
+            รวม: จัดส่งสินค้า ขนส่งทางเรือ (จีน → กรุงเทพฯ) ประกันสินค้า พิธีการศุลกากร อากรนำเข้า ภาษีมูลค่าเพิ่ม และบรรจุภัณฑ์มาตรฐานสำหรับส่งออก
+          </div>
+        </td>
+        <td class="unit">ชุด</td>
+        <td class="qty">1</td>
+        <td class="rate">248,000.00</td>
+        <td class="amount">248,000.00</td>
+      </tr>
+
+      <tr class="section-header">
+        <td colspan="7">โลจิสติกส์และการติดตั้ง</td>
+      </tr>
+
+      <tr>
+        <td class="num">2</td>
+        <td class="code">—</td>
+        <td>
+          <div class="item-desc-main">ค่าขนส่งระหว่างประเทศ พิธีการศุลกากร และจัดส่งถึงหน้างาน</div>
+          <div class="item-desc-sub">
+            ขนส่งทางเรือ LCL โฟซาน → กรุงเทพฯ (2.394 CBM @ 4,600 บาท/CBM = 11,012 บาท) · ประกันสินค้า (Chubb 0.45% × CIF×110%) ·<br>
+            พิธีการศุลกากรไทย + อากรนำเข้า (HS 7610 @ 10%) + ภาษีมูลค่าเพิ่ม 7% · ค่าดำเนินการศุลกากร · จัดส่งถึงหน้างาน (รถ 6 ล้อ)<br>
+            <strong>รวมค่าโลจิสติกส์ทั้งหมด: 47,668 บาท</strong> (รวมในรายการที่ 1 ข้างต้น)
+          </div>
+        </td>
+        <td class="unit">ล็อต</td>
+        <td class="qty">1</td>
+        <td class="rate">—</td>
+        <td class="amount">รวมในราคา</td>
+      </tr>
+
+      <tr>
+        <td class="num">3</td>
+        <td class="code">—</td>
+        <td>
+          <div class="item-desc-main">ติดตั้ง ยาแนว และทดสอบการทำงาน ณ หน้างาน</div>
+          <div class="item-desc-sub">ติดตั้งโดยช่างผู้ชำนาญ · ยาแนวรอบกรอบ · ทดสอบฮาร์ดแวร์และส่งมอบงาน</div>
+        </td>
+        <td class="unit">ล็อต</td>
+        <td class="qty">1</td>
+        <td class="rate">18,000.00</td>
+        <td class="amount">18,000.00</td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  <!-- ยอดรวม -->
+  <div class="totals-block">
+    <table class="totals-table">
+      <tr><td>ยอดรวมก่อนภาษี</td><td>฿266,000.00</td></tr>
+      <tr class="vat"><td>ภาษีมูลค่าเพิ่ม 7%</td><td>฿18,620.00</td></tr>
+      <tr class="grand-total"><td>ยอดรวมทั้งสิ้น</td><td>฿284,620.00</td></tr>
+    </table>
+  </div>
+
+  <!-- กำหนดการโดยประมาณ -->
+  <div class="section">
+    <div class="section-title">กำหนดการโดยประมาณ</div>
+    <table class="schedule-table">
+      <tr>
+        <td>รับเงินมัดจำและยืนยัน Shop Drawing</td>
+        <td>เริ่มดำเนินการเมื่อได้รับมัดจำ 50% พร้อมอนุมัติ Shop Drawing</td>
+        <td>[วันที่รับมัดจำ]</td>
+      </tr>
+      <tr>
+        <td>ผลิตสินค้า</td>
+        <td>30–35 วันทำการ หลังอนุมัติแบบและได้รับมัดจำ</td>
+        <td>[วันที่โดยประมาณ]</td>
+      </tr>
+      <tr>
+        <td>ขนส่งและพิธีการศุลกากร</td>
+        <td>14–21 วัน ขนส่งทางเรือ + พิธีการศุลกากรไทย</td>
+        <td>[วันที่โดยประมาณ]</td>
+      </tr>
+      <tr>
+        <td>จัดส่งและติดตั้ง</td>
+        <td>5–7 วันทำการ ในสภาพหน้างานที่พร้อม</td>
+        <td>[วันที่โดยประมาณ]</td>
+      </tr>
+      <tr>
+        <td><strong>ระยะเวลารวม (โดยประมาณ)</strong></td>
+        <td><strong>49–63 วัน นับจากวันรับมัดจำและอนุมัติแบบ</strong></td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- การรับประกันสินค้า -->
+  <div class="section">
+    <div class="section-title">การรับประกันสินค้า</div>
+    <ul class="terms-list">
+      <li><strong>รับประกัน 2 ปี</strong> สำหรับกรอบอะลูมิเนียม โปรไฟล์ และชุดกระจก นับจากวันติดตั้ง ครอบคลุมข้อบกพร่องจากการผลิตและความแข็งแรงของโครงสร้างภายใต้การใช้งานปกติ</li>
+      <li><strong>รับประกัน 5 ปี</strong> สำหรับอะไหล่ฮาร์ดแวร์ (มือจับ บานพับ กลอนล็อก) ต่อข้อบกพร่องจากการผลิตภายใต้การใช้งานปกติ</li>
+      <li>การรับประกันเป็นโมฆะสำหรับความเสียหายที่เกิดจากการใช้งานผิดวิธี การดัดแปลงโดยไม่ได้รับอนุญาต การสัมผัสสารเคมี หรือแรงกระแทก</li>
+      <li>ในช่วงระยะเวลารับประกัน อะไหล่ที่บกพร่องจะได้รับการเปลี่ยนโดยไม่มีค่าใช้จ่ายสำหรับตัวสินค้า <strong>ค่าขนส่งสำหรับการเคลมประกันเป็นความรับผิดชอบของลูกค้า</strong></li>
+      <li>การรับประกันไม่ครอบคลุมความเสื่อมสภาพทางผิวหน้า (รอยขีดข่วน ออกซิเดชัน) อันเกิดจากการดูแลรักษาที่ไม่เหมาะสมหรือสภาพแวดล้อม</li>
+    </ul>
+  </div>
+
+  <!-- ขอบเขตงาน -->
+  <div class="section">
+    <div class="section-title">ขอบเขตงาน</div>
+    <ul class="terms-list">
+      <li>ขอบเขตครอบคลุมการจัดส่งและติดตั้งระบบประตูบานพับอะลูมิเนียมตามสเปคที่ระบุข้างต้น</li>
+      <li><strong>ไม่รวมงานเตรียมช่องเปิดโครงสร้าง</strong> — ช่องเปิดต้องสร้างให้ได้ขนาดที่กำหนด (กว้าง 2,750 × สูง 2,750 มม. + ค่าผิดพลาด) และต้องสมบูรณ์ ดิ่ง ระดับ และแห้งก่อนวันติดตั้ง</li>
+      <li>ไม่รวมงานโยธา โครงสร้าง งานกันซึม หรืองานระบบที่เกี่ยวข้อง เว้นแต่ระบุไว้ในใบเสนอราคานี้</li>
+      <li>ไม่รวมฟิล์มกระจก มู่ลี่ หรืออุปกรณ์เสริมอื่นๆ เว้นแต่ระบุไว้</li>
+      <li>ไม่รวมงานใดๆ ที่ไม่ได้ระบุในเอกสารฉบับนี้</li>
+    </ul>
+  </div>
+
+  <!-- หมายเหตุ -->
+  <div class="section">
+    <div class="section-title">หมายเหตุ</div>
+    <ul class="terms-list">
+      <li>รูปภาพและสเปคสินค้าในเอกสารนี้เป็นข้อมูลอ้างอิงเท่านั้น ความแตกต่างเล็กน้อยของเฉดสีเป็นสิ่งที่เกิดขึ้นได้ตามกระบวนการผลิต — กรุณายืนยันการเลือกสีเมื่อสั่งซื้อ</li>
+      <li>Areda Atelier สงวนสิทธิ์ในการกำหนดสเปคสุดท้ายและมาตรฐานความสมบูรณ์ของงาน</li>
+      <li>ต้องลงนามสัญญาซื้อขายตามเงื่อนไขมาตรฐานของบริษัทเมื่อยอมรับใบเสนอราคานี้</li>
+      <li><strong>เงินมัดจำไม่สามารถขอคืนได้</strong>เมื่อยืนยันการผลิตกับผู้ผลิตแล้ว</li>
+      <li><strong>ราคาอ้างอิงอัตราแลกเปลี่ยน USD/THB ที่ ฿33.52 ต่อ USD</strong> (อัตราอ้างอิง ธปท. ฿32.54 + buffer 3% ณ วันที่ 2 เมษายน 2569) และมีผล <strong>15 วัน</strong> นับจากวันที่ในเอกสาร หากอัตราแลกเปลี่ยน ธปท. ณ วันยืนยันคำสั่งซื้อเปลี่ยนแปลงเกิน 3% จากอัตราอ้างอิงนี้ บริษัทขอสงวนสิทธิ์ปรับราคา</li>
+      <li>ลูกค้าไม่สามารถระงับการชำระเงินใดๆ ต้องชำระตามกำหนดที่ตกลงไว้ด้านล่าง</li>
+      <li>ข้อบกพร่องของสินค้าจะได้รับการแก้ไขภายใต้เงื่อนไขการรับประกันข้างต้น และไม่สามารถใช้เป็นเหตุผลในการระงับการชำระเงิน</li>
+      <li>กำหนดการโดยประมาณอาจเปลี่ยนแปลงได้จากความล่าช้าของการขนส่ง ศุลกากร หรือความแออัดของท่าเรือ</li>
+      <li>บริษัทจะจัดทำและส่ง Shop Drawing เพื่อขออนุมัติก่อนเริ่มผลิต ลูกค้าต้องอนุมัติภายใน 5 วันทำการเพื่อรักษากำหนดการ</li>
+    </ul>
+  </div>
+
+  <!-- เงื่อนไขการชำระเงิน -->
+  <div class="section">
+    <div class="section-title">เงื่อนไขการชำระเงิน</div>
+    <table class="payment-table">
+      <tr>
+        <td>งวดที่ 1 — 50%</td>
+        <td>มัดจำเมื่อลงนามสัญญา + อนุมัติ Shop Drawing (จำเป็นต้องได้รับก่อนเริ่มผลิต)</td>
+        <td>฿142,310.00</td>
+      </tr>
+      <tr>
+        <td>งวดที่ 2 — 40%</td>
+        <td>ก่อนสินค้าออกจากโรงงานต้นทาง / ก่อนจัดส่งระหว่างประเทศ</td>
+        <td>฿113,848.00</td>
+      </tr>
+      <tr>
+        <td>งวดที่ 3 — 10%</td>
+        <td>หลังติดตั้งเสร็จสมบูรณ์ ทดสอบการทำงาน และส่งมอบงาน</td>
+        <td>฿28,462.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ลงนาม -->
+  <div class="signature-section">
+    <div class="signature-block">
+      <div class="signature-line"></div>
+      <div class="signature-label">ผู้ยืนยันคำสั่งซื้อ</div>
+      <div class="signature-date">
+        <div class="signature-line"></div>
+        <div class="signature-label">วันที่</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ส่วนท้าย -->
+  <div class="footer">
+    <span>Areda Atelier &nbsp;·&nbsp; AQ-26001 แก้ไขครั้งที่ 0 &nbsp;·&nbsp; 2 เมษายน 2569</span>
+    <span>หน้า 1 จาก 1</span>
+  </div>
+
+</div>
+</body>
+</html>

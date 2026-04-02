@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Areda Atelier — Quotation AQ-26001</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-charcoal: #252828;
+    --color-cream: #E1DFD4;
+    --color-taupe: #928A83;
+    --color-deep-dark: #121615;
+    --color-white: #FFFFFF;
+    --font-family: 'Manrope', sans-serif;
+    --space-xxs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px;
+    --space-lg: 24px; --space-xl: 32px; --space-xxl: 48px; --space-xxxl: 64px;
+    --radius-md: 8px;
+    --shadow-lg: 0 4px 16px rgba(18, 22, 21, 0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-family);
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: 400;
+    color: var(--color-charcoal);
+    background: #F5F4F0;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: var(--space-xl) auto;
+    padding: var(--space-xxl) var(--space-xxl) var(--space-xl);
+    background: var(--color-white);
+    box-shadow: var(--shadow-lg);
+  }
+
+  @media print {
+    body { background: none; }
+    .page { margin: 0; padding: 14mm 16mm 12mm; box-shadow: none; width: 100%; min-height: auto; }
+  }
+
+  /* HEADER */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: var(--space-lg);
+    border-bottom: 2px solid var(--color-charcoal);
+    margin-bottom: var(--space-lg);
+  }
+  .company-name { font-size: 26px; font-weight: 700; color: var(--color-charcoal); letter-spacing: -0.5px; }
+  .company-tagline { font-size: 11px; font-weight: 600; color: var(--color-taupe); text-transform: uppercase; letter-spacing: 2px; margin-top: 3px; }
+  .company-details { font-size: 11px; line-height: 17px; color: var(--color-taupe); margin-top: var(--space-sm); }
+  .header-title { text-align: right; }
+  .header-title h1 { font-size: 32px; line-height: 39px; font-weight: 600; color: var(--color-charcoal); letter-spacing: 3px; text-transform: uppercase; }
+  .header-title .doc-meta { font-size: 12px; color: var(--color-taupe); margin-top: var(--space-xxs); }
+  .header-title .doc-code { font-size: 14px; font-weight: 700; color: var(--color-charcoal); }
+
+  /* INFO GRID */
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl); margin-bottom: var(--space-lg); }
+  .info-block .label { font-size: 11px; font-weight: 600; color: var(--color-taupe); text-transform: uppercase; letter-spacing: 1px; margin-bottom: var(--space-xxs); }
+  .info-row { display: flex; gap: var(--space-xs); padding: 2px 0; font-size: 12px; }
+  .info-row .key { min-width: 105px; font-weight: 500; color: var(--color-taupe); flex-shrink: 0; }
+  .info-row .value { color: var(--color-charcoal); font-weight: 500; }
+  .info-row .value.strong { font-weight: 700; }
+
+  /* PROJECT BANNER */
+  .project-banner {
+    background: var(--color-cream);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-lg);
+    display: flex;
+    gap: var(--space-xl);
+  }
+  .project-banner .key { font-size: 11px; font-weight: 600; color: var(--color-taupe); text-transform: uppercase; letter-spacing: 1px; }
+  .project-banner .value { font-size: 13px; font-weight: 600; color: var(--color-charcoal); margin-top: 2px; }
+
+  /* PRODUCT SPEC BOX */
+  .spec-box {
+    border: 1px solid #ECEAE4;
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin-bottom: var(--space-xs);
+    background: #FAFAF8;
+  }
+  .spec-box .spec-title { font-size: 12px; font-weight: 700; color: var(--color-charcoal); margin-bottom: var(--space-xs); }
+  .spec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-xs) var(--space-lg); font-size: 11px; }
+  .spec-grid .sk { color: var(--color-taupe); font-weight: 500; }
+  .spec-grid .sv { color: var(--color-charcoal); font-weight: 600; }
+
+  /* LINE ITEMS TABLE */
+  .items-table { width: 100%; border-collapse: collapse; margin-bottom: var(--space-lg); font-size: 12px; }
+  .items-table thead th {
+    background: var(--color-charcoal); color: var(--color-cream);
+    font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px;
+    padding: var(--space-xs) var(--space-sm); text-align: left; white-space: nowrap;
+  }
+  .items-table thead th.num { text-align: center; width: 36px; }
+  .items-table thead th.code { width: 13%; }
+  .items-table thead th.unit { text-align: center; width: 7%; }
+  .items-table thead th.qty { text-align: center; width: 7%; }
+  .items-table thead th.rate { text-align: right; width: 16%; }
+  .items-table thead th.amount { text-align: right; width: 17%; }
+  .items-table tbody td { padding: var(--space-xs) var(--space-sm); border-bottom: 1px solid #ECEAE4; vertical-align: top; }
+  .items-table tbody td.num { text-align: center; color: var(--color-taupe); font-weight: 500; }
+  .items-table tbody td.code { font-weight: 500; font-size: 11px; }
+  .items-table tbody td.unit { text-align: center; }
+  .items-table tbody td.qty { text-align: center; font-weight: 500; }
+  .items-table tbody td.rate { text-align: right; font-weight: 500; }
+  .items-table tbody td.amount { text-align: right; font-weight: 600; }
+  .items-table tbody tr.section-header td {
+    background: var(--color-cream); font-weight: 700; font-size: 11px;
+    color: var(--color-charcoal); border-bottom: none; padding: var(--space-xs) var(--space-sm);
+  }
+  .items-table tbody tr:hover td { background: #FAFAF8; }
+  .items-table tbody tr.section-header:hover td { background: var(--color-cream); }
+  .item-desc-main { font-weight: 600; color: var(--color-charcoal); }
+  .item-desc-sub { font-size: 11px; color: var(--color-taupe); margin-top: 2px; line-height: 16px; }
+
+  /* TOTALS */
+  .totals-block { display: flex; justify-content: flex-end; margin-bottom: var(--space-xl); }
+  .totals-table { width: 300px; border-collapse: collapse; }
+  .totals-table tr td { padding: var(--space-xs) var(--space-sm); font-size: 13px; }
+  .totals-table tr td:first-child { font-weight: 500; color: var(--color-taupe); }
+  .totals-table tr td:last-child { font-weight: 600; text-align: right; color: var(--color-charcoal); }
+  .totals-table tr.vat td { border-top: 1px solid #ECEAE4; }
+  .totals-table tr.grand-total td { border-top: 2px solid var(--color-charcoal); font-size: 15px; font-weight: 700; padding-top: var(--space-sm); }
+
+  /* SCHEDULE */
+  .section { margin-bottom: var(--space-lg); }
+  .section-title { font-size: 13px; font-weight: 700; color: var(--color-charcoal); margin-bottom: var(--space-sm); padding-bottom: var(--space-xxs); border-bottom: 1px solid #ECEAE4; }
+  .schedule-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .schedule-table td { padding: 3px var(--space-sm); vertical-align: top; }
+  .schedule-table td:first-child { font-weight: 600; color: var(--color-taupe); width: 210px; }
+  .schedule-table td:nth-child(2) { color: var(--color-charcoal); }
+  .schedule-table td:last-child { font-weight: 600; text-align: right; white-space: nowrap; width: 110px; }
+
+  /* TERMS */
+  .terms-list { list-style: none; font-size: 11px; line-height: 18px; color: var(--color-charcoal); }
+  .terms-list li { padding: 2px 0 2px var(--space-md); position: relative; }
+  .terms-list li::before { content: "○"; position: absolute; left: 0; color: var(--color-taupe); font-size: 10px; }
+  .terms-list li strong { color: var(--color-charcoal); }
+
+  /* PAYMENT */
+  .payment-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: var(--space-xs); }
+  .payment-table tr { border-bottom: 1px solid #ECEAE4; }
+  .payment-table td { padding: var(--space-xs) var(--space-sm); }
+  .payment-table td:first-child { font-weight: 700; color: var(--color-charcoal); white-space: nowrap; width: 140px; }
+  .payment-table td:nth-child(2) { color: var(--color-charcoal); }
+  .payment-table td:last-child { text-align: right; font-weight: 700; width: 130px; }
+
+  /* SIGNATURE */
+  .signature-section { margin-top: var(--space-xxxl); display: flex; justify-content: flex-end; }
+  .signature-block { text-align: center; width: 240px; }
+  .signature-line { border-bottom: 1px solid var(--color-charcoal); margin-bottom: var(--space-xs); height: 44px; }
+  .signature-label { font-size: 11px; font-weight: 500; color: var(--color-taupe); }
+  .signature-date { margin-top: var(--space-lg); }
+
+  /* VALIDITY BADGE */
+  .validity-badge {
+    display: inline-block;
+    background: #FEF3C7;
+    border: 1px solid #F59E0B;
+    color: #92400E;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 99px;
+    margin-left: var(--space-xs);
+  }
+
+  /* PRODUCT GALLERY */
+  .gallery-section { margin-bottom: var(--space-lg); }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: var(--space-sm);
+  }
+  .gallery-item {
+    border: 1px solid #ECEAE4;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: #FAFAF8;
+  }
+  .gallery-item.main { grid-row: span 2; }
+  .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .gallery-item.main img { max-height: 260px; object-fit: cover; }
+  .gallery-item.side img { max-height: 124px; object-fit: contain; padding: 6px; }
+  .gallery-caption {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--color-taupe);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 4px var(--space-sm);
+    background: var(--color-cream);
+    text-align: center;
+  }
+
+  /* FOOTER */
+  .footer { margin-top: var(--space-xxl); padding-top: var(--space-sm); border-top: 1px solid #ECEAE4; display: flex; justify-content: space-between; font-size: 10px; color: var(--color-taupe); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div>
+      <img src="images/AA_Logo_HV_1.png" height="44" alt="Areda Atelier" style="display:block;margin-bottom:8px;">
+      <div class="company-details">
+        GO Corporation Co., Ltd. &nbsp;·&nbsp; 11/2 P23 Tower, Unit 8A, Soi Sukhumvit 23, Sukhumvit Rd, Khlong Toei Nuea, Watthana, Bangkok 10110<br>
+        Tel +66 2 124 5000 &nbsp;|&nbsp; contact@goco.bz &nbsp;|&nbsp; Tax ID 0105562096721
+      </div>
+    </div>
+    <div class="header-title">
+      <h1>Quotation</h1>
+      <div class="doc-code">AQ-26001</div>
+      <div class="doc-meta">Rev. 0 &nbsp;·&nbsp; 2 April 2026</div>
+      <div class="doc-meta">Valid until <strong>17 April 2026</strong>
+        <span class="validity-badge">15 days</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CUSTOMER + DOCUMENT INFO -->
+  <div class="info-grid">
+    <div class="info-block">
+      <div class="label">Customer</div>
+      <div class="info-row"><span class="key">Attn.</span><span class="value strong">[Contact Name]</span></div>
+      <div class="info-row"><span class="key">Company</span><span class="value">Cre-Ful Company Limited</span></div>
+      <div class="info-row"><span class="key">Address</span><span class="value">4 Soi Chalermprakiat Ror 9, Soi 30/20, Dokmai, Pravet, Bangkok 10250</span></div>
+      <div class="info-row"><span class="key">Tax ID</span><span class="value">[Tax ID]</span></div>
+      <div class="info-row"><span class="key">Email</span><span class="value">center@creful.co.th</span></div>
+      <div class="info-row"><span class="key">Tel</span><span class="value">+66 2 726 6261</span></div>
+    </div>
+    <div class="info-block">
+      <div class="label">Document</div>
+      <div class="info-row"><span class="key">Quotation No.</span><span class="value strong">AQ-26001</span></div>
+      <div class="info-row"><span class="key">Revision</span><span class="value">0</span></div>
+      <div class="info-row"><span class="key">Date</span><span class="value">2 April 2026</span></div>
+      <div class="info-row"><span class="key">Proposed by</span><span class="value">[Proposer Name]</span></div>
+      <div class="info-row"><span class="key">Contact</span><span class="value">[Email]</span></div>
+      <div class="info-row"><span class="key">Mobile</span><span class="value">[Mobile]</span></div>
+    </div>
+  </div>
+
+  <!-- PROJECT BANNER -->
+  <div class="project-banner">
+    <div>
+      <div class="key">Project</div>
+      <div class="value">[Project Name]</div>
+    </div>
+    <div>
+      <div class="key">Subject</div>
+      <div class="value">Aluminum Folding Door — ED 70 Series, Double Glazed Thermal Break</div>
+    </div>
+  </div>
+
+  <!-- PRODUCT SPEC BOX -->
+  <div class="spec-box">
+    <div class="spec-title">Product Specification — ED 70 Aluminum Folding Door</div>
+    <div class="spec-grid">
+      <div><span class="sk">Series</span><br><span class="sv">ED 70 Folding Door</span></div>
+      <div><span class="sk">Profile Frame</span><br><span class="sv">2.0 mm Aluminum</span></div>
+      <div><span class="sk">System</span><br><span class="sv">Thermal Break 70 mm</span></div>
+      <div><span class="sk">Glass</span><br><span class="sv">5mm + 18A + 5mm Tempered Clear IGU</span></div>
+      <div><span class="sk">Opening (W × H)</span><br><span class="sv">2,750 × 2,750 mm</span></div>
+      <div><span class="sk">Area</span><br><span class="sv">7.56 m²</span></div>
+      <div><span class="sk">Hardware</span><br><span class="sv">PAG Series</span></div>
+      <div><span class="sk">Color Options</span><br><span class="sv">Black / Grey / White / Coffee</span></div>
+      <div><span class="sk">Location Ref.</span><br><span class="sv">D1</span></div>
+    </div>
+  </div>
+
+  <!-- PRODUCT GALLERY -->
+  <div class="gallery-section">
+    <div class="section-title" style="font-size:13px;font-weight:700;color:var(--color-charcoal);margin-bottom:var(--space-sm);padding-bottom:var(--space-xxs);border-bottom:1px solid #ECEAE4;">Product Reference Images</div>
+    <div class="gallery-grid">
+      <div class="gallery-item main">
+        <img src="images/supplier_img_2.jpeg" alt="ED 70 Folding Door — Installed">
+        <div class="gallery-caption">ED 70 Folding Door — Installed View</div>
+      </div>
+      <div class="gallery-item side">
+        <img src="images/supplier_img_1.jpeg" alt="Technical Drawing">
+        <div class="gallery-caption">Technical Drawing — 2,750 × 2,750 mm</div>
+      </div>
+      <div class="gallery-item side" style="display:grid;grid-template-rows:1fr auto;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+          <img src="images/supplier_img_4.jpeg" alt="Color Options" style="width:100%;max-height:80px;object-fit:cover;display:block;">
+          <img src="images/supplier_img_3.jpeg" alt="Export Packaging" style="width:100%;max-height:80px;object-fit:cover;display:block;">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;">
+          <div class="gallery-caption">Color Options</div>
+          <div class="gallery-caption">Export Packaging</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LINE ITEMS -->
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th class="num">No.</th>
+        <th class="code">Product Code</th>
+        <th class="desc">Description</th>
+        <th class="unit">Unit</th>
+        <th class="qty">Qty</th>
+        <th class="rate">Unit Rate (THB)</th>
+        <th class="amount">Amount (THB)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr class="section-header">
+        <td colspan="7">Aluminum Windows &amp; Doors — Imported</td>
+      </tr>
+
+      <tr>
+        <td class="num">1</td>
+        <td class="code">AA-FD-ED70</td>
+        <td>
+          <div class="item-desc-main">ED 70 Aluminum Folding Door — Double Glazed, Thermal Break</div>
+          <div class="item-desc-sub">
+            Profile: ED 70 Series · Frame: 2.0 mm aluminum · System: Thermal Break 70mm<br>
+            Glass: 5mm + 18A + 5mm Tempered Clear IGU · Area: 7.56 m²<br>
+            Hardware: PAG Series · Opening: 2,750 × 2,750 mm · Location: D1<br>
+            Color: Black / Grey / White / Coffee (confirm at order)<br>
+            Includes: supply, sea freight (China → Bangkok), cargo insurance, Thai customs clearance, import duty &amp; VAT, standard export packaging
+          </div>
+        </td>
+        <td class="unit">set</td>
+        <td class="qty">1</td>
+        <td class="rate">248,000.00</td>
+        <td class="amount">248,000.00</td>
+      </tr>
+
+      <tr class="section-header">
+        <td colspan="7">Logistics &amp; Installation</td>
+      </tr>
+
+      <tr>
+        <td class="num">2</td>
+        <td class="code">—</td>
+        <td>
+          <div class="item-desc-main">International Freight, Customs Clearance &amp; Local Delivery to Site</div>
+          <div class="item-desc-sub">
+            Sea LCL freight Foshan → Bangkok (2.394 CBM @ THB 4,600/CBM = THB 11,012) · Cargo insurance (Chubb 0.45% × CIF×110%) ·<br>
+            Thai customs clearance + import duty (HS 7610 @ 10%) + VAT 7% · Clearance service fee · Last-mile delivery (6-wheel truck)<br>
+            <strong>Total logistics component: THB 47,668</strong> (included in item 1 above)
+          </div>
+        </td>
+        <td class="unit">lot</td>
+        <td class="qty">1</td>
+        <td class="rate">—</td>
+        <td class="amount">Included</td>
+      </tr>
+
+      <tr>
+        <td class="num">3</td>
+        <td class="code">—</td>
+        <td>
+          <div class="item-desc-main">On-site Installation, Sealing &amp; Commissioning</div>
+          <div class="item-desc-sub">Professional installation by certified technician · Perimeter sealing · Hardware commissioning &amp; handover testing</div>
+        </td>
+        <td class="unit">lot</td>
+        <td class="qty">1</td>
+        <td class="rate">18,000.00</td>
+        <td class="amount">18,000.00</td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  <!-- TOTALS -->
+  <div class="totals-block">
+    <table class="totals-table">
+      <tr><td>Subtotal</td><td>฿266,000.00</td></tr>
+      <tr class="vat"><td>VAT 7%</td><td>฿18,620.00</td></tr>
+      <tr class="grand-total"><td>Total</td><td>฿284,620.00</td></tr>
+    </table>
+  </div>
+
+  <!-- SCHEDULE -->
+  <div class="section">
+    <div class="section-title">Estimated Schedule</div>
+    <table class="schedule-table">
+      <tr>
+        <td>Deposit &amp; Drawing Confirmation</td>
+        <td>Order placed upon receipt of 50% deposit + confirmed shop drawings</td>
+        <td>[Deposit Date]</td>
+      </tr>
+      <tr>
+        <td>Production</td>
+        <td>30–35 working days after drawing approval &amp; deposit received</td>
+        <td>[Approx. Date]</td>
+      </tr>
+      <tr>
+        <td>Shipping &amp; Customs Clearance</td>
+        <td>14–21 days sea freight + Thai customs clearance</td>
+        <td>[Approx. Date]</td>
+      </tr>
+      <tr>
+        <td>Delivery &amp; Installation</td>
+        <td>5–7 working days in ready site condition</td>
+        <td>[Approx. Date]</td>
+      </tr>
+      <tr>
+        <td><strong>Total Lead Time (Estimate)</strong></td>
+        <td><strong>49–63 days from deposit + drawing confirmation</strong></td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- WARRANTY -->
+  <div class="section">
+    <div class="section-title">Product Warranty</div>
+    <ul class="terms-list">
+      <li><strong>2-year warranty</strong> on the aluminum frame, profile, and glazed unit from date of installation — covering manufacturing defects and structural integrity under normal use.</li>
+      <li><strong>5-year warranty</strong> on hardware components (handles, hinges, locking mechanisms) against manufacturing defects under normal use.</li>
+      <li>Warranty is void for damage caused by misuse, unauthorized modification, chemical exposure, or impact.</li>
+      <li>During the warranty period, defective parts will be replaced at no charge for the product. <strong>Shipping costs for warranty parts are borne by the customer.</strong></li>
+      <li>Warranty does not cover cosmetic wear (scratches, surface oxidation) due to improper maintenance or environmental exposure.</li>
+    </ul>
+  </div>
+
+  <!-- SCOPE OF WORK -->
+  <div class="section">
+    <div class="section-title">Scope of Work</div>
+    <ul class="terms-list">
+      <li>Scope covers supply, delivery, and installation of the aluminum folding door system as specified above.</li>
+      <li><strong>Structural opening preparation is excluded</strong> — the opening must be built to specified dimensions (W 2,750 × H 2,750 mm + tolerance) and must be structurally complete, plumb, level, and dry before installation date.</li>
+      <li>Excluding associated civil, structural, waterproofing, or MEP works unless separately specified.</li>
+      <li>Excluding glass film, blinds, or additional hardware accessories unless specified.</li>
+      <li>Excluding any works not mentioned in this document.</li>
+    </ul>
+  </div>
+
+  <!-- REMARKS -->
+  <div class="section">
+    <div class="section-title">Remarks</div>
+    <ul class="terms-list">
+      <li>Product images and specifications are for reference only. Minor variations in color tone are inherent to the manufacturing process — confirm color selection at time of order.</li>
+      <li>Areda Atelier reserves the right to determine final specification and completion standard.</li>
+      <li>A sales contract based on our standard terms must be signed upon acceptance of this quotation.</li>
+      <li><strong>Deposit payment is non-refundable</strong> once production has been confirmed with the manufacturer.</li>
+      <li><strong>Unit rates are based on the USD/THB exchange rate of ฿33.52 per USD</strong> (BOT reference rate ฿32.54 + 3% buffer, as of 2 April 2026) and are valid for <strong>15 days</strong> from the document date. Rates are subject to adjustment if the prevailing BOT rate at time of order deviates by more than 3% from this reference rate.</li>
+      <li>The client may not withhold any payment; all payments must follow the agreed schedule below.</li>
+      <li>Any product defects will be resolved under the warranty terms above and may not be used as grounds to withhold payment.</li>
+      <li>Estimated schedule is subject to unforeseen delays in shipping, customs, or port congestion.</li>
+      <li>Shop drawings will be prepared and submitted for customer approval before production commences. Approval is required within 5 working days to maintain the schedule.</li>
+    </ul>
+  </div>
+
+  <!-- PAYMENT TERMS -->
+  <div class="section">
+    <div class="section-title">Payment Terms</div>
+    <table class="payment-table">
+      <tr>
+        <td>Payment 1 — 50%</td>
+        <td>Deposit upon signing contract + shop drawing approval (required to commence production)</td>
+        <td>฿142,310.00</td>
+      </tr>
+      <tr>
+        <td>Payment 2 — 40%</td>
+        <td>Before goods depart origin factory / prior to international shipment</td>
+        <td>฿113,848.00</td>
+      </tr>
+      <tr>
+        <td>Payment 3 — 10%</td>
+        <td>After installation complete, commissioning, and handover</td>
+        <td>฿28,462.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- SIGNATURE -->
+  <div class="signature-section">
+    <div class="signature-block">
+      <div class="signature-line"></div>
+      <div class="signature-label">Order Confirmed By</div>
+      <div class="signature-date">
+        <div class="signature-line"></div>
+        <div class="signature-label">Date</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span>Areda Atelier &nbsp;·&nbsp; AQ-26001 Rev.0 &nbsp;·&nbsp; 2 April 2026</span>
+    <span>Page 1 of 1</span>
+  </div>
+
+</div>
+</body>
+</html>
