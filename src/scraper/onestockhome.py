@@ -87,7 +87,14 @@ def _parse_price(price_text: str) -> float | None:
 
 
 def scrape_page(client: httpx.Client, page: int) -> list[ScrapedProduct]:
-    """Scrape a single page of the product table."""
+    """Scrape a single page of the product table.
+
+    OneStockHome is a React SPA — product listings are client-rendered.
+    We extract data from:
+    1. Schema.org JSON-LD structured data (SSR for SEO)
+    2. Links matching /th/items/ pattern
+    3. Fallback text parsing
+    """
     url = f"{ONESTOCKHOME_TABLE_URL}?page={page}"
     resp = client.get(url, headers=_HEADERS, follow_redirects=True)
     resp.raise_for_status()
@@ -96,16 +103,47 @@ def scrape_page(client: httpx.Client, page: int) -> list[ScrapedProduct]:
     now = datetime.now(timezone.utc)
     products = []
 
-    # Find product rows — each product is in a list item or table row
-    # OneStockHome uses div-based layout for product table
-    product_elements = soup.select(
-        "[class*='product-item'], [class*='item-row'], "
-        "div[class*='flex'][class*='items-center']"
-    )
+    # Method 1: Extract from JSON-LD structured data
+    for script in soup.find_all("script", type="application/ld+json"):
+        try:
+            import json
+            data = json.loads(script.string)
+            offers = []
+            if isinstance(data, dict) and "offers" in data:
+                offers = data["offers"] if isinstance(data["offers"], list) else [data["offers"]]
+            elif isinstance(data, dict) and "itemListElement" in data:
+                for item in data["itemListElement"]:
+                    if "item" in item and "offers" in item["item"]:
+                        offers.append({"item": item["item"], **item["item"]["offers"]})
 
-    if not product_elements:
-        # Fallback: try to find links with product URLs
-        for link in soup.find_all("a", href=re.compile(r"/th/products/")):
+            for offer in offers:
+                name = offer.get("name", "") or data.get("name", "")
+                price = _parse_price(str(offer.get("price", "")))
+                item_url = offer.get("url", "")
+
+                if name:
+                    size_inch, od_mm = _parse_size_from_name(name)
+                    thickness = _parse_thickness_from_name(name)
+                    code_match = re.search(r"/items/(\d+)", item_url)
+                    products.append(
+                        ScrapedProduct(
+                            product_name=name,
+                            osh_code=code_match.group(1) if code_match else None,
+                            url=item_url if item_url.startswith("http") else ONESTOCKHOME_BASE_URL + item_url,
+                            size_inch=size_inch,
+                            outside_diameter_mm=od_mm,
+                            thickness_mm=thickness,
+                            price_thb=price,
+                            product_type=_classify_product(name),
+                            scraped_at=now,
+                        )
+                    )
+        except (json.JSONDecodeError, KeyError, TypeError):
+            continue
+
+    # Method 2: Find links with /th/items/ pattern (SPA may include some in SSR)
+    if not products:
+        for link in soup.find_all("a", href=re.compile(r"/th/items/")):
             name = link.get_text(strip=True)
             if not name or len(name) < 5:
                 continue
@@ -114,20 +152,15 @@ def scrape_page(client: httpx.Client, page: int) -> list[ScrapedProduct]:
             if not href.startswith("http"):
                 href = ONESTOCKHOME_BASE_URL + href
 
-            # Try to find price near this element
             parent = link.find_parent(["div", "tr", "li"])
             price = None
             if parent:
-                price_el = parent.find(
-                    string=re.compile(r"[\d,]+\.\d{2}")
-                )
+                price_el = parent.find(string=re.compile(r"[\d,]+\.\d{2}"))
                 if price_el:
                     price = _parse_price(price_el.strip())
 
-            # Find OSH code
-            code_match = re.search(r"รหัสสินค้า\s*(\d+)", parent.get_text() if parent else "")
+            code_match = re.search(r"/items/(\d+)", href)
             osh_code = code_match.group(1) if code_match else None
-
             size_inch, od_mm = _parse_size_from_name(name)
             thickness = _parse_thickness_from_name(name)
 
@@ -140,7 +173,7 @@ def scrape_page(client: httpx.Client, page: int) -> list[ScrapedProduct]:
                     outside_diameter_mm=od_mm,
                     thickness_mm=thickness,
                     price_thb=price,
-                    unit="เส้น" if "เส้น" in (parent.get_text() if parent else "") else None,
+                    unit="เส้น" if parent and "เส้น" in parent.get_text() else None,
                     product_type=_classify_product(name),
                     scraped_at=now,
                 )

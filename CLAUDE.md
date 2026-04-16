@@ -48,11 +48,18 @@ Master instructions: `Credentials Claude Code/Instructions/API Access Master Ins
 ### Credential File References
 | File | Location | Purpose |
 |---|---|---|
-| `ai-agents-go-4c81b70995db.json` | Credentials folder | GCP service account key |
-| `client_secret_538978391890-*.json` | Credentials folder | GCP OAuth client |
-| `xero_tokens.json` | Credentials folder | Xero OAuth tokens (rotating) |
-| `token_oauth.json` | Credentials folder | Google OAuth token |
-| `token_gmail_settings.json` | Credentials folder | Gmail OAuth token |
+| `ai-agents-go-4c81b70995db.json` | `C:\Users\Eukrit\OneDrive\Documents\Claude Code\Credentials Claude Code\` | GCP service account key |
+
+### Local Development Setup
+```bash
+# Copy SA key to local credentials folder (gitignored)
+mkdir -p credentials
+cp "C:\Users\Eukrit\OneDrive\Documents\Claude Code\Credentials Claude Code\ai-agents-go-4c81b70995db.json" credentials/
+# Create .env from template
+cp .env.example .env
+# GOOGLE_APPLICATION_CREDENTIALS=./credentials/ai-agents-go-4c81b70995db.json is already set
+```
+In Cloud Run: uses Application Default Credentials (ADC) via the service account — no JSON file needed.
 
 ## Safety Rules
 - NEVER commit credentials, API keys, or tokens
