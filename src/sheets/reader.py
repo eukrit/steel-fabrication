@@ -28,8 +28,34 @@ def _safe_float(val: str | None) -> float | None:
 
 
 def get_gspread_client() -> gspread.Client:
-    """Get a gspread client using default service account credentials."""
-    return gspread.service_account()
+    """Get a gspread client using default or file-based SA credentials.
+
+    In Cloud Run: uses Application Default Credentials (ADC).
+    Locally: uses service_account.json from gspread config or GOOGLE_APPLICATION_CREDENTIALS.
+    """
+    import os
+
+    creds_path = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "")
+    if creds_path and os.path.exists(creds_path):
+        return gspread.service_account(filename=creds_path)
+
+    # Try default gspread location
+    default_path = os.path.expanduser("~/.config/gspread/service_account.json")
+    if os.path.exists(default_path):
+        return gspread.service_account(filename=default_path)
+
+    # Cloud Run: use Application Default Credentials
+    import google.auth
+    from google.auth.transport.requests import Request
+
+    credentials, project = google.auth.default(
+        scopes=[
+            "https://spreadsheets.google.com/feeds",
+            "https://www.googleapis.com/auth/drive",
+        ]
+    )
+    credentials.refresh(Request())
+    return gspread.authorize(credentials)
 
 
 def read_chs_jis_m(gc: gspread.Client) -> list[ExistingSheetRow]:
