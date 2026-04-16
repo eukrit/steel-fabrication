@@ -1,17 +1,17 @@
-# [PROJECT_NAME]
+# steel-fabrication
 
 ## Project Identity
-- Project: [PROJECT_NAME]
+- Project: steel-fabrication
 - Owner: Eukrit / GO Corporation Co., Ltd.
 - Notion Dashboard: https://www.notion.so/gocorp/Coding-Project-Dashboard-Claude-32c82cea8bb080f1bbd7f26770ae9e80
-- GitHub Repo: https://github.com/eukrit/[PROJECT_NAME]
+- GitHub Repo: https://github.com/eukrit/steel-fabrication
 - GCP Project ID: ai-agents-go
 - GCP Project Number: 538978391890
-- Cloud Run Service: [PROJECT_NAME]
+- Cloud Run Service: steel-fabrication
 - Region: asia-southeast1
 - Service Account: claude@ai-agents-go.iam.gserviceaccount.com
-- Artifact Registry: asia-southeast1-docker.pkg.dev/ai-agents-go/[PROJECT_NAME]
-- Language: [node|python]
+- Artifact Registry: asia-southeast1-docker.pkg.dev/ai-agents-go/steel-fabrication
+- Language: python
 
 ## Related Repos
 - **accounting-automation** (master) — Peak API, Xero, MCP server → `eukrit/accounting-automation`
@@ -43,13 +43,7 @@ Master instructions: `Credentials Claude Code/Instructions/API Access Master Ins
 ### GCP Secret Manager (CI/CD)
 | Secret Name | Source File | Used By |
 |---|---|---|
-| `peak-api-token` | Peak API Credential.txt | Peak API calls |
-| `xero-client-secret` | Xero Credentials.txt | Xero OAuth refresh |
-| `notion-api-key` | NOTION_API_KEY.md | Notion API |
-| `slack-bot-token` | Slack OAuth.txt | Slack notifications |
-| `figma-token` | Figma Token.txt | Figma API |
-| `stitch-api-key` | Stitch API Key.txt | Stitch Design API |
-| `n8n-webhook-key` | n8n config | n8n webhook auth |
+| GCP SA key (default) | ai-agents-go-4c81b70995db.json | Sheets API, Firestore |
 
 ### Credential File References
 | File | Location | Purpose |
@@ -82,11 +76,29 @@ Run `./verify.sh` for full verification suite.
 Minimum pass rate: 100% on critical path, 80% overall.
 
 ## Tech Stack
-- Runtime: [Node.js 20 | Python 3.11]
+- Runtime: Python 3.11
 - Infrastructure: GCP Cloud Run + Cloud Build
 - CI/CD: GitHub → GCP Cloud Build trigger
 - Automation: n8n (gocorp.app.n8n.cloud)
 - Docs: Notion
 
 ## Project-Specific Notes
-[Add any project-specific instructions here]
+
+### Data Sources
+- **Google Sheet**: `18wczPjTPic2GPh0cG_1hwalGXQK3tMzNvU-dmA3aSxk`
+  - 'CHS JIS M' (gid=1757329436) — existing price data
+  - 'CHS Table' (gid=1059692193) — OD reference table
+  - 'CHS JIS Claude' — output sheet (created by this service)
+- **Standards**: TIS 107 (Thai), JIS G3444 (Japanese) — hardcoded from PDFs
+- **Pricing**: OneStockHome (onestockhome.com) — scraped daily
+
+### Firestore Database: `steel-sections`
+- `sections` — engineering reference data (standards)
+- `vendors` — vendor registry (extensible)
+- `vendor_prices` — pricing per vendor per section
+  - `price_history` subcollection — daily price tracking
+- `scrape_runs` — audit log
+
+### Daily Sync
+- Cloud Scheduler calls POST /sync at 6 AM Bangkok time
+- Scrapes onestockhome → merges with standards → writes sheet + Firestore
