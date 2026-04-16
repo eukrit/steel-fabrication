@@ -96,6 +96,19 @@ async def list_standards():
     }
 
 
+@app.post("/price-research")
+async def price_research(write_sheet: bool = False):
+    """Run price benchmarking: compare our prices vs local + global references."""
+    from src.pipeline.price_research import run_price_research
+
+    try:
+        report = run_price_research(write_sheet=write_sheet)
+        return JSONResponse(content=report)
+    except Exception as e:
+        logger.exception("Price research failed")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 if __name__ == "__main__":
     import uvicorn
 
