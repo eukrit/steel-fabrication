@@ -30,11 +30,12 @@
 
   <h2>Latest build</h2>
   <p>
-    Version <strong>0.2.0</strong> ·
+    Version <strong>0.3.0</strong> ·
     <span class="badge badge-success">success</span>
   </p>
-  <p>Added <code>scripts/load_fasteners.py</code> — ingests the <em>Fasteners Schedule Ver. 2024</em> Google Sheet into the <code>steel-sections</code> Firestore DB. Created the <code>fasteners</code> collection (232 docs with an <code>orders</code> subcollection of 936 line items) and 10 sibling collections covering types, threads, assembly config, vendor pricelists (TPC / Abpon), total-order rollup, and SO21/22/23 purchase orders.</p>
+  <p>Added <code>scripts/generate_fasteners_catalog.py</code> and generated <code>catalog.html</code> — a self-contained interactive catalog with 8 tabs over all Firestore fastener data (232 models, vendor pricelists, assembly config, POs, orders history per model).</p>
   <p>
+    <a href="catalog.html">Open catalog</a> ·
     <a href="CHANGELOG.md">Full build log</a> ·
     Source: <a href="https://docs.google.com/spreadsheets/d/1VjEG_KSlDcfK6DO8pm_UIrZkUkawixPwzSVvGwKv_Lk/edit">Fasteners Schedule Ver. 2024</a>
   </p>
@@ -61,6 +62,12 @@
   <table>
     <thead><tr><th>Version</th><th>Date</th><th>Summary</th><th>Status</th></tr></thead>
     <tbody>
+      <tr>
+        <td>0.3.0</td>
+        <td>2026-04-21</td>
+        <td>Interactive <code>catalog.html</code> generator — 8 tabs, click-to-expand orders drawer.</td>
+        <td><span class="badge badge-success">success</span></td>
+      </tr>
       <tr>
         <td>0.2.0</td>
         <td>2026-04-21</td>

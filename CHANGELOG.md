@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-04-21
+
+### Added
+- `scripts/generate_fasteners_catalog.py` — reads every `fastener*` collection
+  from Firestore and writes a self-contained `catalog.html` (≈860 KB) at the
+  project root. No network calls at runtime; all data is embedded.
+- `catalog.html` — interactive catalog with 8 tabs:
+  1. Catalog — 232 models, live search + type/thread/material filters, click
+     any row to see the orders history for that model.
+  2. Vendor Pricelists — TPC Bolt M 304 pivot (304 price points, length × size)
+     and Abpon flat pricelist.
+  3. Assembly Config — clamp / base / anchor bolt hardware sets.
+  4. Fittings — keder / cable / fork.
+  5. Misc Pricelist — ANC SUS / Hilti HY 200R / stud lines.
+  6. Total Orders — required / stock / actual rollup.
+  7. Purchase Orders — SO21/22/23 with per-PO line items.
+  8. Reference — types, threads, Order N column metadata.
+
 ## [0.2.0] - 2026-04-21
 
 ### Added
