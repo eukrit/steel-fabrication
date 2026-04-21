@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>steel-fabrication — Build Summary</title>
+  <style>
+    body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; max-width: 960px; margin: 2rem auto; padding: 0 1rem; color: #1a1a1a; }
+    h1 { margin-bottom: 0.25rem; }
+    h2 { margin-top: 2rem; }
+    .meta { color: #666; font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; }
+    .badge-success { background: #d1fae5; color: #065f46; }
+    .badge-failed  { background: #fee2e2; color: #991b1b; }
+    .badge-pending { background: #fef3c7; color: #92400e; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #eee; vertical-align: top; }
+    th { background: #fafafa; font-weight: 600; }
+    code { background: #f4f4f5; padding: 1px 6px; border-radius: 4px; font-size: 0.9em; }
+    a { color: #2563eb; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1>steel-fabrication</h1>
+  <div class="meta">
+    Repo: <a href="https://github.com/eukrit/steel-fabrication">eukrit/steel-fabrication</a> ·
+    Branch: <code>main</code> ·
+    Last updated: 2026-04-21
+  </div>
+
+  <h2>Latest build</h2>
+  <p>
+    Version <strong>0.2.0</strong> ·
+    <span class="badge badge-success">success</span>
+  </p>
+  <p>Added <code>scripts/load_fasteners.py</code> — ingests the <em>Fasteners Schedule Ver. 2024</em> Google Sheet into the <code>steel-sections</code> Firestore DB. Created the <code>fasteners</code> collection (232 docs with an <code>orders</code> subcollection of 936 line items) and 10 sibling collections covering types, threads, assembly config, vendor pricelists (TPC / Abpon), total-order rollup, and SO21/22/23 purchase orders.</p>
+  <p>
+    <a href="CHANGELOG.md">Full build log</a> ·
+    Source: <a href="https://docs.google.com/spreadsheets/d/1VjEG_KSlDcfK6DO8pm_UIrZkUkawixPwzSVvGwKv_Lk/edit">Fasteners Schedule Ver. 2024</a>
+  </p>
+
+  <h2>Firestore collections written (DB: <code>steel-sections</code>)</h2>
+  <table>
+    <thead><tr><th>Collection</th><th>Docs</th><th>Source tab(s)</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>fasteners</code></td><td>232</td><td>Fasteners</td><td>Master catalog; doc id = slug(model). <code>orders</code> subcollection with 936 line items (qty &gt; 0).</td></tr>
+      <tr><td><code>fastener_types</code></td><td>34</td><td>Type</td><td>Type code → material + Thai description.</td></tr>
+      <tr><td><code>fastener_threads</code></td><td>10</td><td>Thread</td><td>M5–M30 thread size → pitch (mm).</td></tr>
+      <tr><td><code>fastener_config</code></td><td>29</td><td>Config</td><td>Clamp / base / anchor bolt hardware assembly configurations.</td></tr>
+      <tr><td><code>fastener_fittings</code></td><td>4</td><td>Fittings</td><td>Keder, cable, fork fittings.</td></tr>
+      <tr><td><code>fastener_pricelist</code></td><td>8</td><td>Pricelist</td><td>ANC SUS, Hilti HY 200R, stud pricing lines.</td></tr>
+      <tr><td><code>fastener_vendor_pricelists</code></td><td>2</td><td>TPC Bolt M 304, Abpon</td><td>TPC pivot → 304 price points. Abpon → 34 list-price rows.</td></tr>
+      <tr><td><code>fastener_orders</code></td><td>169</td><td>Fasteners (headers)</td><td>Order N column metadata: project + date.</td></tr>
+      <tr><td><code>fastener_total_orders</code></td><td>123</td><td>Total Order</td><td>Flat rollup of required / stock / actual order.</td></tr>
+      <tr><td><code>fastener_purchase_orders</code></td><td>9</td><td>SO21-* / SO22-* / SO23-*</td><td>Per-PO docs with embedded line items array.</td></tr>
+      <tr><td><code>fastener_sync_runs</code></td><td>1+</td><td>—</td><td>Audit log per loader run.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Recent versions</h2>
+  <table>
+    <thead><tr><th>Version</th><th>Date</th><th>Summary</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>0.2.0</td>
+        <td>2026-04-21</td>
+        <td>Fasteners Schedule Ver. 2024 ingested into Firestore — 11 collections, 617 top-level docs, 936 subcollection docs.</td>
+        <td><span class="badge badge-success">success</span></td>
+      </tr>
+      <tr>
+        <td>0.1.0</td>
+        <td>2026-03-24</td>
+        <td>Initial project template with CI/CD pipeline.</td>
+        <td><span class="badge badge-success">success</span></td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>
