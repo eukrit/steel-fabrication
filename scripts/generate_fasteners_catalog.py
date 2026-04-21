@@ -127,7 +127,16 @@ def render(
         "total_orders": total_orders,
         "purchase_orders": purchase_orders,
     }
+    # JSON inside <script> is raw text in HTML5 — entities are NOT decoded.
+    # Only thing we must neutralize is the literal closing tag '</script>'
+    # (and defensively '<!--' / '-->' which can also terminate scripts in some parsers).
     payload_json = json.dumps(payload, default=_json_default, ensure_ascii=False)
+    payload_json = (
+        payload_json
+        .replace("</", "<\\/")
+        .replace("<!--", "<\\!--")
+        .replace("-->", "--\\>")
+    )
 
     type_opts_html = "".join(f'<option value="{html.escape(t)}">{html.escape(t)}</option>' for t in type_options)
     thread_opts_html = "".join(f'<option value="{html.escape(t)}">{html.escape(t)}</option>' for t in thread_options)
@@ -344,7 +353,7 @@ def render(
   <div class="dialog-body" id="orders-dialog-body"></div>
 </dialog>
 
-<script id="payload" type="application/json">{html.escape(payload_json)}</script>
+<script id="payload" type="application/json">{payload_json}</script>
 <script>
 const DATA = JSON.parse(document.getElementById('payload').textContent);
 

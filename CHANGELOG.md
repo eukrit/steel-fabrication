@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] - 2026-04-21
+
+### Fixed
+- `catalog.html` rendered blank because the embedded JSON payload was HTML-escaped
+  (`&quot;` etc.) inside a `<script type="application/json">` block — HTML5 does not
+  decode entities inside `<script>`, so `JSON.parse` on `textContent` saw literal
+  `&quot;` and failed silently. Replaced `html.escape()` with targeted escaping of
+  `</`, `<!--`, `-->` only (the actual characters that can terminate a script block).
+- Added `.claude/launch.json` so the catalog can be previewed via
+  `python -m http.server`.
+
 ## [0.3.0] - 2026-04-21
 
 ### Added
