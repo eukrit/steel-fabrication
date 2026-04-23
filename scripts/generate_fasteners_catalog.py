@@ -38,14 +38,13 @@ def _credentials_path() -> str:
     env = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "")
     if env and Path(env).exists():
         return env
-    fallback = (
-        "C:/Users/Eukrit/OneDrive/Documents/Claude Code/"
-        "Credentials Claude Code/ai-agents-go-4c81b70995db.json"
-    )
-    if Path(fallback).exists():
-        os.environ.setdefault("GOOGLE_APPLICATION_CREDENTIALS", fallback)
-        return fallback
-    raise FileNotFoundError("SA key not found")
+    creds_dir = Path("C:/Users/Eukrit/OneDrive/Documents/Claude Code/Credentials Claude Code")
+    candidates = sorted(creds_dir.glob("ai-agents-go-*.json"))
+    if candidates:
+        chosen = str(candidates[-1]).replace("\\", "/")
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = chosen
+        return chosen
+    raise FileNotFoundError("ai-agents-go SA key not found")
 
 
 def fetch_collection(db: firestore.Client, name: str) -> list[dict]:
@@ -85,6 +84,11 @@ def render(
     orders_meta: list[dict],
     total_orders: list[dict],
     purchase_orders: list[dict],
+    sanko_products: list[dict],
+    sanko_prices: list[dict],
+    sanko_quotations: list[dict],
+    sanko_purchase_orders: list[dict],
+    sanko_documents: list[dict],
 ) -> str:
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
@@ -113,11 +117,19 @@ def render(
         f["material"] = mat_by_type.get(f.get("type_code", ""), "")
         f["type_description_th"] = desc_by_type.get(f.get("type_code", ""), "")
 
+    # Sanko-specific dropdown options
+    sanko_categories = sorted({p.get("category", "") for p in sanko_products if p.get("category")})
+
     # Payload for JS
     payload = {
         "generated_at": now,
         "fasteners": fasteners,
         "types": types,
+        "sanko_products": sanko_products,
+        "sanko_prices": sanko_prices,
+        "sanko_quotations": sanko_quotations,
+        "sanko_purchase_orders": sanko_purchase_orders,
+        "sanko_documents": sanko_documents,
         "threads": threads,
         "config": config,
         "fittings": fittings,
@@ -217,11 +229,13 @@ def render(
     <div class="kpi"><div class="label">Inventory value</div><div class="value">฿{inventory_value:,.0f}</div><div class="hint">cost × total ordered</div></div>
     <div class="kpi"><div class="label">Vendors priced</div><div class="value">{len(vendor_pricelists)}</div><div class="hint">TPC · Abpon</div></div>
     <div class="kpi"><div class="label">Purchase orders</div><div class="value">{len(purchase_orders)}</div><div class="hint">SO21 / SO22 / SO23</div></div>
+    <div class="kpi"><div class="label">Sanko products</div><div class="value">{len(sanko_products)}</div><div class="hint">{len(sanko_documents)} docs · {len(sanko_quotations)} QTPs</div></div>
   </div>
 
   <div class="tabs" id="tabs">
     <div class="tab active" data-tab="catalog">Catalog</div>
     <div class="tab" data-tab="vendors">Vendor Pricelists</div>
+    <div class="tab" data-tab="sanko">Sanko</div>
     <div class="tab" data-tab="config">Assembly Config</div>
     <div class="tab" data-tab="fittings">Fittings</div>
     <div class="tab" data-tab="pricelist">Misc Pricelist</div>
@@ -258,6 +272,72 @@ def render(
       <select id="vendor-pick"></select>
     </div>
     <div id="vendor-content"></div>
+  </section>
+
+  <section class="tab-pane" id="tab-sanko">
+    <div class="kpi-grid">
+      <div class="kpi"><div class="label">Sanko products</div><div class="value">{len(sanko_products)}</div><div class="hint">{sum(1 for p in sanko_products if p.get('latest_unit_price_thb'))} priced</div></div>
+      <div class="kpi"><div class="label">Pricelist rows</div><div class="value">{len(sanko_prices)}</div><div class="hint">drop-in + drill bits</div></div>
+      <div class="kpi"><div class="label">Quotations</div><div class="value">{len(sanko_quotations)}</div><div class="hint">QTP* + ใบเสนอราคา</div></div>
+      <div class="kpi"><div class="label">POs / invoices</div><div class="value">{len(sanko_purchase_orders)}</div><div class="hint">PO-* / PI-*</div></div>
+      <div class="kpi"><div class="label">Documents</div><div class="value">{len(sanko_documents)}</div><div class="hint">PDFs · images · videos</div></div>
+    </div>
+
+    <div class="panel">
+      <h2>Products</h2>
+      <div class="filters">
+        <input id="sanko-q" type="search" placeholder="Search code, family, description…"/>
+        <select id="sanko-cat"><option value="">All categories</option>{"".join(f'<option value="{html.escape(c)}">{html.escape(c)}</option>' for c in sanko_categories)}</select>
+        <label class="muted"><input type="checkbox" id="sanko-priced"/> Priced only</label>
+        <span class="count" id="sanko-count"></span>
+      </div>
+      <div class="table-wrap">
+        <table id="sanko-products-tbl">
+          <thead><tr>
+            <th>Code</th><th>Category</th><th>Family</th><th>Description</th>
+            <th class="num">Latest ฿</th><th class="num">Min ฿</th><th class="num">Max ฿</th>
+            <th class="num">Sources</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Pricelist rows</h2>
+      <div class="table-wrap" style="max-height:380px">
+        <table id="sanko-prices-tbl">
+          <thead><tr>
+            <th>Code</th><th>Family</th><th>Description / Size</th>
+            <th class="num">List ฿</th><th class="num">Net ฿</th><th class="num">Disc %</th><th>Date</th><th>Source</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Quotations &amp; purchase orders</h2>
+      <div class="filters">
+        <select id="sanko-qpick"></select>
+      </div>
+      <div id="sanko-qcontent"></div>
+    </div>
+
+    <div class="panel">
+      <h2>All Sanko documents</h2>
+      <div class="filters">
+        <input id="sanko-doc-q" type="search" placeholder="Filter file name / folder…"/>
+      </div>
+      <div class="table-wrap" style="max-height:380px">
+        <table id="sanko-docs-tbl">
+          <thead><tr>
+            <th>Date</th><th>Folder</th><th>File</th><th>Category</th><th class="num">Size</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
   </section>
 
   <section class="tab-pane" id="tab-config">
@@ -475,6 +555,98 @@ function renderVendor() {{
 $vpick.addEventListener('change', renderVendor);
 renderVendor();
 
+// ---------- sanko ----------
+const sankoProds = DATA.sanko_products || [];
+const sankoPrices = DATA.sanko_prices || [];
+const sankoQs = (DATA.sanko_quotations || []).concat(DATA.sanko_purchase_orders || []);
+const sankoDocs = DATA.sanko_documents || [];
+
+const $sq = document.getElementById('sanko-q');
+const $scat = document.getElementById('sanko-cat');
+const $spriced = document.getElementById('sanko-priced');
+const $scount = document.getElementById('sanko-count');
+function renderSankoProducts() {{
+  const q = ($sq.value||'').toLowerCase().trim();
+  const cat = $scat.value;
+  const priced = $spriced.checked;
+  const rows = sankoProds.filter(p => {{
+    if (cat && p.category !== cat) return false;
+    if (priced && !(p.latest_unit_price_thb > 0)) return false;
+    if (q) {{
+      const hay = [p.product_code, p.family, p.description, ...(p.descriptions||[])].join(' ').toLowerCase();
+      if (!hay.includes(q)) return false;
+    }}
+    return true;
+  }});
+  $scount.textContent = `${{rows.length}} of ${{sankoProds.length}} products`;
+  document.querySelector('#sanko-products-tbl tbody').innerHTML = rows.map(p => `
+    <tr>
+      <td><strong>${{esc(p.product_code||'')}}</strong></td>
+      <td><span class="chip">${{esc(p.category||'')}}</span></td>
+      <td>${{esc(p.family||'')}}</td>
+      <td class="muted">${{esc(p.description||'')}}</td>
+      <td class="num">${{fmt(p.latest_unit_price_thb,2)}}</td>
+      <td class="num">${{fmt(p.min_unit_price_thb,2)}}</td>
+      <td class="num">${{fmt(p.max_unit_price_thb,2)}}</td>
+      <td class="num">${{fmt(p.source_count)}}</td>
+    </tr>`).join('') || '<tr><td colspan="8" class="empty">No matches</td></tr>';
+}}
+[$sq,$scat,$spriced].forEach(el => el.addEventListener('input', renderSankoProducts));
+renderSankoProducts();
+
+// Sanko prices table
+document.querySelector('#sanko-prices-tbl tbody').innerHTML = sankoPrices.map(r => `
+  <tr>
+    <td><strong>${{esc(r.product_code||'')}}</strong></td>
+    <td>${{esc(r.product_family_hint||'')}}</td>
+    <td>${{esc(r.description || r.size || '')}}</td>
+    <td class="num">${{fmt(r.list_price_thb,2)}}</td>
+    <td class="num">${{fmt(r.net_price_thb,2)}}</td>
+    <td class="num">${{r.discount_pct != null ? fmt(r.discount_pct,0)+'%' : ''}}</td>
+    <td>${{esc(r.pricelist_date||'')}}</td>
+    <td class="muted">${{esc(r.source||'')}}</td>
+  </tr>`).join('');
+
+// Sanko quotations / POs picker
+const $sqp = document.getElementById('sanko-qpick');
+const sankoQsSorted = [...sankoQs].sort((a,b) => (b.doc_date||'').localeCompare(a.doc_date||''));
+$sqp.innerHTML = sankoQsSorted.map((q,i) =>
+  `<option value="${{i}}">${{esc(q.doc_date||'')}} · ${{esc(q.doc_id||'')}} (${{esc(q.doc_type||'')}}, ${{q.item_count||0}} items)</option>`).join('');
+function renderSankoDoc() {{
+  const q = sankoQsSorted[Number($sqp.value||0)];
+  if (!q) return;
+  let h = `<div class="muted" style="margin-bottom:0.5rem">Source: ${{esc(q.source_file||'')}}</div>`;
+  if ((q.items||[]).length === 0) {{
+    h += '<div class="empty">No structured line items extracted (likely image-based PDF).</div>';
+  }} else {{
+    h += '<div class="table-wrap"><table><thead><tr><th>#</th><th>Code</th><th>Description</th><th class="num">Qty</th><th>Unit</th><th class="num">Unit ฿</th><th class="num">Discount ฿</th><th class="num">Amount ฿</th></tr></thead><tbody>';
+    h += q.items.map(i => `<tr><td class="num">${{i.line_no}}</td><td><strong>${{esc(i.product_code||'')}}</strong></td><td>${{esc(i.description||'')}}</td><td class="num">${{fmt(i.qty)}}</td><td>${{esc(i.unit||'')}}</td><td class="num">${{fmt(i.unit_price_thb,2)}}</td><td class="num">${{fmt(i.discount_thb,2)}}</td><td class="num">${{fmt(i.amount_thb,2)}}</td></tr>`).join('');
+    h += '</tbody></table></div>';
+  }}
+  document.getElementById('sanko-qcontent').innerHTML = h;
+}}
+$sqp.addEventListener('change', renderSankoDoc);
+renderSankoDoc();
+
+// Sanko docs
+const $sdocQ = document.getElementById('sanko-doc-q');
+function fmtSize(b) {{ if (!b) return ''; if (b<1024) return b+' B'; if (b<1048576) return (b/1024).toFixed(0)+' KB'; return (b/1048576).toFixed(1)+' MB'; }}
+function renderSankoDocs() {{
+  const q = ($sdocQ.value||'').toLowerCase().trim();
+  const rows = sankoDocs.filter(d => !q || (d.relative_path||'').toLowerCase().includes(q) || (d.category||'').toLowerCase().includes(q));
+  rows.sort((a,b) => (b.file_date||'').localeCompare(a.file_date||''));
+  document.querySelector('#sanko-docs-tbl tbody').innerHTML = rows.map(d => `
+    <tr>
+      <td>${{esc(d.file_date||'')}}</td>
+      <td class="muted">${{esc(d.folder||'.')}}</td>
+      <td>${{esc(d.filename||'')}}</td>
+      <td><span class="chip">${{esc(d.category||'')}}</span></td>
+      <td class="num">${{fmtSize(d.size_bytes||0)}}</td>
+    </tr>`).join('');
+}}
+$sdocQ.addEventListener('input', renderSankoDocs);
+renderSankoDocs();
+
 // ---------- config ----------
 const $configQ = document.getElementById('config-q');
 function renderConfig() {{
@@ -571,23 +743,34 @@ def main() -> int:
     orders_meta = fetch_collection(db, "fastener_orders")
     total_orders = fetch_collection(db, "fastener_total_orders")
     purchase_orders = fetch_collection(db, "fastener_purchase_orders")
+    # Sanko vendor archive
+    sanko_products = fetch_collection(db, "sanko_products")
+    sanko_prices = fetch_collection(db, "sanko_prices")
+    sanko_quotations = fetch_collection(db, "sanko_quotations")
+    sanko_pos = fetch_collection(db, "sanko_purchase_orders")
+    sanko_documents = fetch_collection(db, "sanko_documents")
 
     # Sort reference lists
     types.sort(key=lambda t: t.get("type_code", ""))
     threads.sort(key=lambda t: (len(t.get("thread", "")), t.get("thread", "")))
     orders_meta.sort(key=lambda o: o.get("column_index", 0))
+    sanko_products.sort(key=lambda p: (p.get("category", ""), p.get("product_code", "")))
 
     logger.info(
         "counts: fasteners=%d types=%d threads=%d config=%d fittings=%d pricelist=%d "
-        "vendors=%d orders_meta=%d total_orders=%d pos=%d",
+        "vendors=%d orders_meta=%d total_orders=%d pos=%d | sanko_products=%d "
+        "sanko_prices=%d sanko_quotations=%d sanko_pos=%d sanko_docs=%d",
         len(fasteners), len(types), len(threads), len(config), len(fittings),
         len(pricelist), len(vendor_pricelists), len(orders_meta),
         len(total_orders), len(purchase_orders),
+        len(sanko_products), len(sanko_prices), len(sanko_quotations),
+        len(sanko_pos), len(sanko_documents),
     )
 
     html_content = render(
         fasteners, types, threads, config, fittings, pricelist,
         vendor_pricelists, orders_meta, total_orders, purchase_orders,
+        sanko_products, sanko_prices, sanko_quotations, sanko_pos, sanko_documents,
     )
 
     out_path = Path("catalog.html")

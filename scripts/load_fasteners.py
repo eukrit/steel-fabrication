@@ -57,15 +57,13 @@ def _sa_credentials_path() -> str:
     env = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "")
     if env and Path(env).exists():
         return env
-    fallback = (
-        "C:/Users/Eukrit/OneDrive/Documents/Claude Code/"
-        "Credentials Claude Code/ai-agents-go-4c81b70995db.json"
-    )
-    if Path(fallback).exists():
-        return fallback
+    creds_dir = Path("C:/Users/Eukrit/OneDrive/Documents/Claude Code/Credentials Claude Code")
+    candidates = sorted(creds_dir.glob("ai-agents-go-*.json"))
+    if candidates:
+        return str(candidates[-1]).replace("\\", "/")
     raise FileNotFoundError(
-        "Service account key not found. "
-        "Set GOOGLE_APPLICATION_CREDENTIALS or place the SA key in the credentials folder."
+        "ai-agents-go SA key not found. "
+        "Set GOOGLE_APPLICATION_CREDENTIALS or place an ai-agents-go-*.json in the credentials folder."
     )
 
 

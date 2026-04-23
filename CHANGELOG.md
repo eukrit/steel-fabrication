@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-04-23
+
+### Added
+- `scripts/load_sanko.py` — ingests the entire Sanko Fastem Thailand archive
+  at `C:/Users/Eukrit/My Drive/Products GO/Fastener Products/Sanko Fastem Thailand`
+  into Firestore (database `steel-sections`). Walks every file, classifies each
+  (quotation / PO / invoice / pricelist / product catalog / admin), extracts text
+  from PDFs, and parses line items from Sanko's quotation/PO format with a
+  regex that handles the concatenated-amount quirk.
+- New Sanko collections:
+  - `sanko_documents` (113 docs) — metadata for every file in the archive
+  - `sanko_products` (53) — derived catalog from line items + hand-coded
+    product families (BA/C/CT/GA/GT/HAS/SC Type anchors, ML SDS-Plus drill
+    bits, ER/VR chemical anchors, DBD/DBR benders, AH hammer, HandyPuncher, etc.)
+  - `sanko_prices` (25) — pricelist rows from the 2021-03-12 Drop-in and
+    Drill-bit pricelists (list + net + discount)
+  - `sanko_quotations` (11) — parsed QTP*/quotation PDFs with line items
+  - `sanko_purchase_orders` (3) — PO-* / PI-* documents
+  - `sanko_sync_runs` — audit log
+- `catalog.html` now has a **Sanko** tab showing: KPI summary, searchable
+  products table with category filter + priced-only toggle, pricelist rows,
+  quotation/PO picker with line-item breakdown, and a searchable document
+  index sorted by date (Thai filenames intact).
+- SA key path resolution is now dynamic — `ai-agents-go-*.json` glob picks
+  up rotated keys automatically (old `4c81b70995db` → current `9b4219be8c01`).
+
+### Result
+- Sanko load run `FBDSHKDLdVe6Xku4ZpMx` — status `success`.
+
 ## [0.3.1] - 2026-04-21
 
 ### Fixed
